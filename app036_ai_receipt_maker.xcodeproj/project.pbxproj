@@ -1,0 +1,563 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXContainerItemProxy section */
+		05474DAC2E47E012008C4D37 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 05474D962E47E010008C4D37 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 05474D9D2E47E010008C4D37;
+			remoteInfo = app036_ai_receipt_maker;
+		};
+		05474DB62E47E012008C4D37 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 05474D962E47E010008C4D37 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 05474D9D2E47E010008C4D37;
+			remoteInfo = app036_ai_receipt_maker;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		05474D9E2E47E010008C4D37 /* app036_ai_receipt_maker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = app036_ai_receipt_maker.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		05474DAB2E47E012008C4D37 /* app036_ai_receipt_makerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = app036_ai_receipt_makerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		05474DB52E47E012008C4D37 /* app036_ai_receipt_makerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = app036_ai_receipt_makerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		05474DA02E47E010008C4D37 /* app036_ai_receipt_maker */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = app036_ai_receipt_maker;
+			sourceTree = "<group>";
+		};
+		05474DAE2E47E012008C4D37 /* app036_ai_receipt_makerTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = app036_ai_receipt_makerTests;
+			sourceTree = "<group>";
+		};
+		05474DB82E47E012008C4D37 /* app036_ai_receipt_makerUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = app036_ai_receipt_makerUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		05474D9B2E47E010008C4D37 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		05474DA82E47E012008C4D37 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		05474DB22E47E012008C4D37 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		05474D952E47E010008C4D37 = {
+			isa = PBXGroup;
+			children = (
+				05474DA02E47E010008C4D37 /* app036_ai_receipt_maker */,
+				05474DAE2E47E012008C4D37 /* app036_ai_receipt_makerTests */,
+				05474DB82E47E012008C4D37 /* app036_ai_receipt_makerUITests */,
+				05474D9F2E47E010008C4D37 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		05474D9F2E47E010008C4D37 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				05474D9E2E47E010008C4D37 /* app036_ai_receipt_maker.app */,
+				05474DAB2E47E012008C4D37 /* app036_ai_receipt_makerTests.xctest */,
+				05474DB52E47E012008C4D37 /* app036_ai_receipt_makerUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		05474D9D2E47E010008C4D37 /* app036_ai_receipt_maker */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 05474DBF2E47E012008C4D37 /* Build configuration list for PBXNativeTarget "app036_ai_receipt_maker" */;
+			buildPhases = (
+				05474D9A2E47E010008C4D37 /* Sources */,
+				05474D9B2E47E010008C4D37 /* Frameworks */,
+				05474D9C2E47E010008C4D37 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				05474DA02E47E010008C4D37 /* app036_ai_receipt_maker */,
+			);
+			name = app036_ai_receipt_maker;
+			packageProductDependencies = (
+			);
+			productName = app036_ai_receipt_maker;
+			productReference = 05474D9E2E47E010008C4D37 /* app036_ai_receipt_maker.app */;
+			productType = "com.apple.product-type.application";
+		};
+		05474DAA2E47E012008C4D37 /* app036_ai_receipt_makerTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 05474DC22E47E012008C4D37 /* Build configuration list for PBXNativeTarget "app036_ai_receipt_makerTests" */;
+			buildPhases = (
+				05474DA72E47E012008C4D37 /* Sources */,
+				05474DA82E47E012008C4D37 /* Frameworks */,
+				05474DA92E47E012008C4D37 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				05474DAD2E47E012008C4D37 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				05474DAE2E47E012008C4D37 /* app036_ai_receipt_makerTests */,
+			);
+			name = app036_ai_receipt_makerTests;
+			packageProductDependencies = (
+			);
+			productName = app036_ai_receipt_makerTests;
+			productReference = 05474DAB2E47E012008C4D37 /* app036_ai_receipt_makerTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		05474DB42E47E012008C4D37 /* app036_ai_receipt_makerUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 05474DC52E47E012008C4D37 /* Build configuration list for PBXNativeTarget "app036_ai_receipt_makerUITests" */;
+			buildPhases = (
+				05474DB12E47E012008C4D37 /* Sources */,
+				05474DB22E47E012008C4D37 /* Frameworks */,
+				05474DB32E47E012008C4D37 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				05474DB72E47E012008C4D37 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				05474DB82E47E012008C4D37 /* app036_ai_receipt_makerUITests */,
+			);
+			name = app036_ai_receipt_makerUITests;
+			packageProductDependencies = (
+			);
+			productName = app036_ai_receipt_makerUITests;
+			productReference = 05474DB52E47E012008C4D37 /* app036_ai_receipt_makerUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		05474D962E47E010008C4D37 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1640;
+				LastUpgradeCheck = 1640;
+				TargetAttributes = {
+					05474D9D2E47E010008C4D37 = {
+						CreatedOnToolsVersion = 16.4;
+					};
+					05474DAA2E47E012008C4D37 = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 05474D9D2E47E010008C4D37;
+					};
+					05474DB42E47E012008C4D37 = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 05474D9D2E47E010008C4D37;
+					};
+				};
+			};
+			buildConfigurationList = 05474D992E47E010008C4D37 /* Build configuration list for PBXProject "app036_ai_receipt_maker" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 05474D952E47E010008C4D37;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 05474D9F2E47E010008C4D37 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				05474D9D2E47E010008C4D37 /* app036_ai_receipt_maker */,
+				05474DAA2E47E012008C4D37 /* app036_ai_receipt_makerTests */,
+				05474DB42E47E012008C4D37 /* app036_ai_receipt_makerUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		05474D9C2E47E010008C4D37 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		05474DA92E47E012008C4D37 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		05474DB32E47E012008C4D37 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		05474D9A2E47E010008C4D37 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		05474DA72E47E012008C4D37 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		05474DB12E47E012008C4D37 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		05474DAD2E47E012008C4D37 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 05474D9D2E47E010008C4D37 /* app036_ai_receipt_maker */;
+			targetProxy = 05474DAC2E47E012008C4D37 /* PBXContainerItemProxy */;
+		};
+		05474DB72E47E012008C4D37 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 05474D9D2E47E010008C4D37 /* app036_ai_receipt_maker */;
+			targetProxy = 05474DB62E47E012008C4D37 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		05474DBD2E47E012008C4D37 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = D7Y723ZTC8;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		05474DBE2E47E012008C4D37 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = D7Y723ZTC8;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		05474DC02E47E012008C4D37 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = D7Y723ZTC8;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.app036-ai-receipt-maker";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		05474DC12E47E012008C4D37 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = D7Y723ZTC8;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.app036-ai-receipt-maker";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		05474DC32E47E012008C4D37 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = D7Y723ZTC8;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.app036-ai-receipt-makerTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/app036_ai_receipt_maker.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/app036_ai_receipt_maker";
+			};
+			name = Debug;
+		};
+		05474DC42E47E012008C4D37 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = D7Y723ZTC8;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.app036-ai-receipt-makerTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/app036_ai_receipt_maker.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/app036_ai_receipt_maker";
+			};
+			name = Release;
+		};
+		05474DC62E47E012008C4D37 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = D7Y723ZTC8;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.app036-ai-receipt-makerUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = app036_ai_receipt_maker;
+			};
+			name = Debug;
+		};
+		05474DC72E47E012008C4D37 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = D7Y723ZTC8;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.app036-ai-receipt-makerUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = app036_ai_receipt_maker;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		05474D992E47E010008C4D37 /* Build configuration list for PBXProject "app036_ai_receipt_maker" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				05474DBD2E47E012008C4D37 /* Debug */,
+				05474DBE2E47E012008C4D37 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		05474DBF2E47E012008C4D37 /* Build configuration list for PBXNativeTarget "app036_ai_receipt_maker" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				05474DC02E47E012008C4D37 /* Debug */,
+				05474DC12E47E012008C4D37 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		05474DC22E47E012008C4D37 /* Build configuration list for PBXNativeTarget "app036_ai_receipt_makerTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				05474DC32E47E012008C4D37 /* Debug */,
+				05474DC42E47E012008C4D37 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		05474DC52E47E012008C4D37 /* Build configuration list for PBXNativeTarget "app036_ai_receipt_makerUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				05474DC62E47E012008C4D37 /* Debug */,
+				05474DC72E47E012008C4D37 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 05474D962E47E010008C4D37 /* Project object */;
+}
