@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ReceiptFormView: View {
     @ObservedObject var viewModel: ReceiptFormViewModel
+    @EnvironmentObject private var mainViewModel: MainViewModel
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -57,7 +58,11 @@ struct ReceiptFormView: View {
             }
             
             Button("Generate Receipt") {
-                // TODO: Implement generate custom receipt
+                let receiptData = viewModel.createReceiptData()
+                
+                Task {
+                    await mainViewModel.generateReceipt(receiptData: receiptData)
+                }
             }
             .buttonStyle(.borderedProminent)
             .controlSize(.large)
@@ -69,6 +74,6 @@ struct ReceiptFormView: View {
     }
 }
 
-#Preview {
-    ReceiptFormView(viewModel: ReceiptFormViewModel())
-}
+//#Preview {
+//    ReceiptFormView(viewModel: ReceiptFormViewModel())
+//}

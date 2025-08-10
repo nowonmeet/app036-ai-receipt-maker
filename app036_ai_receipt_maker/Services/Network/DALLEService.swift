@@ -22,8 +22,8 @@ final class DALLEService: DALLEServiceProtocol {
         ]
     }
     
-    init(apiKey: String) {
-        self.apiKey = apiKey
+    init() {
+        self.apiKey = APIConfiguration.openAIAPIKey
     }
     
     func generateReceiptImage(prompt: String) async throws -> Data {
@@ -35,11 +35,12 @@ final class DALLEService: DALLEServiceProtocol {
             throw AppError.apiError("API key is required")
         }
         
-        let requestBody = DALLERequest(
+        let requestBody = GPTImageRequest(
+            model: "gpt-image-1",
             prompt: prompt,
             n: 1,
-            size: "1024x1024",
-            response_format: "b64_json"
+            quality: "low",
+            size: "1024x1024"
         )
         
         guard let url = URL(string: baseURL) else {
@@ -52,6 +53,10 @@ final class DALLEService: DALLEServiceProtocol {
         
         do {
             request.httpBody = try JSONEncoder().encode(requestBody)
+            // リクエスト内容をログ出力
+            print("🚀 API Request URL: \(baseURL)")
+            print("🚀 API Request Model: \(requestBody.model)")
+            print("🚀 API Request Body: \(String(data: request.httpBody!, encoding: .utf8) ?? "Unable to encode")")
         } catch {
             throw AppError.networkError("Failed to encode request: \(error.localizedDescription)")
         }
@@ -64,12 +69,18 @@ final class DALLEService: DALLEServiceProtocol {
             }
             
             guard httpResponse.statusCode == 200 else {
+                // エラーレスポンスの内容をログ出力
+                let errorResponse = String(data: data, encoding: .utf8) ?? "Unable to decode error response"
+                print("❌ API Error Response: \(errorResponse)")
+                print("❌ Status Code: \(httpResponse.statusCode)")
+                print("❌ Request URL: \(request.url?.absoluteString ?? "Unknown")")
+                print("❌ Request Body: \(String(data: request.httpBody ?? Data(), encoding: .utf8) ?? "Unknown")")
                 throw AppError.apiError("API request failed with status code: \(httpResponse.statusCode)")
             }
             
-            let dalleResponse = try JSONDecoder().decode(DALLEResponse.self, from: data)
+            let gptImageResponse = try JSONDecoder().decode(GPTImageResponse.self, from: data)
             
-            guard let firstImage = dalleResponse.data.first,
+            guard let firstImage = gptImageResponse.data.first,
                   let imageData = Data(base64Encoded: firstImage.b64_json) else {
                 throw AppError.apiError("Failed to decode image data from response")
             }
@@ -136,17 +147,18 @@ final class DALLEService: DALLEServiceProtocol {
 
 // MARK: - Data Transfer Objects
 
-private struct DALLERequest: Codable {
+private struct GPTImageRequest: Codable {
+    let model: String
     let prompt: String
     let n: Int
+    let quality: String
     let size: String
-    let response_format: String
 }
 
-private struct DALLEResponse: Codable {
-    let data: [DALLEImageData]
+private struct GPTImageResponse: Codable {
+    let data: [GPTImageData]
 }
 
-private struct DALLEImageData: Codable {
+private struct GPTImageData: Codable {
     let b64_json: String
 }

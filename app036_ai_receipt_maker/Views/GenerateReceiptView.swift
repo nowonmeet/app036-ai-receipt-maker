@@ -6,9 +6,13 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct GenerateReceiptView: View {
+    @Environment(\.modelContext) private var modelContext
+    @EnvironmentObject private var mainViewModel: MainViewModel
     @StateObject private var formViewModel = ReceiptFormViewModel()
+    @State private var showingError = false
     
     var body: some View {
         NavigationView {
@@ -29,7 +33,9 @@ struct GenerateReceiptView: View {
                             .multilineTextAlignment(.center)
                         
                         Button("Generate Random Receipt") {
-                            // TODO: Implement generate random receipt
+                            Task {
+                                await mainViewModel.generateRandomReceipt()
+                            }
                         }
                         .buttonStyle(.borderedProminent)
                         .controlSize(.large)
@@ -45,14 +51,36 @@ struct GenerateReceiptView: View {
                     .padding(.horizontal)
                 
                 Spacer()
+                
+                if mainViewModel.isGenerating {
+                    ProgressView("Generating...")
+                        .progressViewStyle(CircularProgressViewStyle())
+                        .scaleEffect(1.5)
+                        .padding()
+                }
             }
             .padding()
             .navigationTitle("Generate")
             .navigationBarTitleDisplayMode(.inline)
+            .disabled(mainViewModel.isGenerating)
+            .alert("Error", isPresented: $showingError) {
+                Button("OK") {
+                    mainViewModel.clearError()
+                }
+            } message: {
+                Text(mainViewModel.errorMessage ?? "An error occurred")
+            }
+            .onReceive(mainViewModel.$errorMessage) { errorMessage in
+                showingError = errorMessage != nil
+            }
+            .sheet(isPresented: $mainViewModel.showPaywall) {
+                PaywallView()
+            }
         }
     }
 }
 
 #Preview {
     GenerateReceiptView()
+        .modelContainer(for: [ReceiptData.self, UsageTracker.self])
 }

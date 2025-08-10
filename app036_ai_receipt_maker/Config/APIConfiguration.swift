@@ -9,11 +9,11 @@ import Foundation
 
 enum APIConfiguration {
     static var openAIAPIKey: String {
-        guard let apiKey = Bundle.main.object(forInfoDictionaryKey: "OPENAI_API_KEY") as? String,
+        guard let apiKey = ProcessInfo.processInfo.environment["OPENAI_API_KEY"],
               !apiKey.isEmpty,
               !apiKey.contains("your-") else {
             #if DEBUG
-            fatalError("⚠️ OpenAI API Key not configured. Please set OPENAI_API_KEY in Development.xcconfig")
+            fatalError("⚠️ OpenAI API Key not configured. Please set OPENAI_API_KEY in Xcode Scheme Environment Variables")
             #else
             fatalError("⚠️ OpenAI API Key not configured")
             #endif
@@ -22,11 +22,11 @@ enum APIConfiguration {
     }
     
     static var apiBaseURL: String {
-        guard let baseURL = Bundle.main.object(forInfoDictionaryKey: "API_BASE_URL") as? String,
-              !baseURL.isEmpty else {
-            return "https://api.openai.com/v1/"
+        if let baseURL = ProcessInfo.processInfo.environment["API_BASE_URL"],
+           !baseURL.isEmpty {
+            return baseURL
         }
-        return baseURL
+        return "https://api.openai.com/v1/"
     }
     
     static func validateConfiguration() {

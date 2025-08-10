@@ -6,10 +6,26 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ContentView: View {
+    @Environment(\.modelContext) private var modelContext
+    @StateObject private var mainViewModel: MainViewModel
+    
+    init() {
+        let context = ModelContainer.shared.mainContext
+        _mainViewModel = StateObject(wrappedValue: MainViewModel(
+            dalleService: DALLEService(),
+            subscriptionService: SubscriptionService(),
+            receiptRepository: ReceiptRepository(modelContext: context),
+            usageRepository: UsageRepository(modelContext: context),
+            imageStorageService: ImageStorageService()
+        ))
+    }
+    
     var body: some View {
         MainTabView()
+            .environmentObject(mainViewModel)
     }
 }
 
