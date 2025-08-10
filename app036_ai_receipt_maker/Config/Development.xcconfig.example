@@ -1,0 +1,5 @@
+// Development Configuration Example
+// Copy this file to Development.xcconfig and add your actual API key
+
+OPENAI_API_KEY = sk-service-your-actual-development-key-here
+API_BASE_URL = https://api.openai.com/v1/
