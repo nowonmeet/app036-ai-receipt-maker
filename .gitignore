@@ -102,5 +102,9 @@ Config/Production.xcconfig
 .env.development
 .env.production
 
+# Xcode Scheme files that may contain environment variables
+*.xcodeproj/xcuserdata/
+*.xcodeproj/xcshareddata/xcschemes/
+
 # macOS
 .DS_Store
