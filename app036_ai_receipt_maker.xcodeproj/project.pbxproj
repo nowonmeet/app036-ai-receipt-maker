@@ -6,6 +6,11 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		054750602E494267008C4D37 /* RevenueCat in Frameworks */ = {isa = PBXBuildFile; productRef = 0547505F2E494267008C4D37 /* RevenueCat */; };
+		054750622E494267008C4D37 /* RevenueCatUI in Frameworks */ = {isa = PBXBuildFile; productRef = 054750612E494267008C4D37 /* RevenueCatUI */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		05474DAC2E47E012008C4D37 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -52,6 +57,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				054750622E494267008C4D37 /* RevenueCatUI in Frameworks */,
+				054750602E494267008C4D37 /* RevenueCat in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +119,8 @@
 			);
 			name = app036_ai_receipt_maker;
 			packageProductDependencies = (
+				0547505F2E494267008C4D37 /* RevenueCat */,
+				054750612E494267008C4D37 /* RevenueCatUI */,
 			);
 			productName = app036_ai_receipt_maker;
 			productReference = 05474D9E2E47E010008C4D37 /* app036_ai_receipt_maker.app */;
@@ -195,6 +204,9 @@
 			);
 			mainGroup = 05474D952E47E010008C4D37;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				0547505E2E494267008C4D37 /* XCRemoteSwiftPackageReference "purchases-ios" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 05474D9F2E47E010008C4D37 /* Products */;
 			projectDirPath = "";
@@ -558,6 +570,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		0547505E2E494267008C4D37 /* XCRemoteSwiftPackageReference "purchases-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/RevenueCat/purchases-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.34.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		0547505F2E494267008C4D37 /* RevenueCat */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0547505E2E494267008C4D37 /* XCRemoteSwiftPackageReference "purchases-ios" */;
+			productName = RevenueCat;
+		};
+		054750612E494267008C4D37 /* RevenueCatUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0547505E2E494267008C4D37 /* XCRemoteSwiftPackageReference "purchases-ios" */;
+			productName = RevenueCatUI;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 05474D962E47E010008C4D37 /* Project object */;
 }
