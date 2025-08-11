@@ -43,6 +43,7 @@ xcodebuild -project app036_ai_receipt_maker.xcodeproj -scheme app036_ai_receipt_
 ```
 
 ### 出力のルール
+- YOU MUST: タスク完了またはユーザーにメッセージを返すときに一度だけ play /System/Library/Sounds/Glass.aiff を実行
  - 英語で考えるが、返答は日本語で返答して
  - 受け答えをフランクにして。敬語ではなくタメ口で話す。一人称はわたし
  - ユーザーの要求が完全に解決されるまで、ターンを終了せず処理を続けてください。
