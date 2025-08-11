@@ -134,8 +134,8 @@ public final class UniversalPaywallManager: NSObject, ObservableObject {
             print("  - Current isShowingPaywall: \(isShowingPaywall)")
         }
         
-        // Analyticsイベントを記録
-        AnalyticsService.shared.logPaywallDismissed(reason: "close_button")
+        // Analyticsイベントを記録 (AnalyticsService未実装のためコメントアウト)
+        // AnalyticsService.shared.logPaywallDismissed(reason: "close_button")
         
         DispatchQueue.main.async {
             self.isShowingPaywall = false
@@ -159,8 +159,8 @@ public final class UniversalPaywallManager: NSObject, ObservableObject {
             print("🎉 Purchase completion process started")
         }
         
-        // Analyticsイベントを記録
-        AnalyticsService.shared.logTrialStarted()
+        // Analyticsイベントを記録 (AnalyticsService未実装のためコメントアウト)
+        // AnalyticsService.shared.logTrialStarted()
         
         isShowingPaywall = false
         
