@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct SettingsView: View {
+    @ObservedObject private var paywallManager = UniversalPaywallManager.shared
+    
     var body: some View {
         NavigationView {
             VStack(spacing: 20) {
@@ -39,7 +41,7 @@ struct SettingsView: View {
                 .cornerRadius(12)
                 
                 Button("Upgrade to Premium") {
-                    // TODO: Implement subscription upgrade
+                    paywallManager.showPaywall(triggerSource: "settings_upgrade_button")
                 }
                 .buttonStyle(.borderedProminent)
                 .controlSize(.large)

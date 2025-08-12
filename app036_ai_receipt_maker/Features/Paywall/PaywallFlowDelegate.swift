@@ -22,8 +22,6 @@ public protocol PaywallFlowDelegate: AnyObject {
     func didUpdatePremiumStatus(isPremium: Bool, customerInfo: CustomerInfo?)
     /// エラー発生
     func didEncounterError(_ error: Error)
-    /// アナリティクス送信可否をアプリ側に委譲
-    func shouldSendAnalytics(eventName: String, parameters: [String: Any])
 }
 
 // デフォルト実装を空で提供
@@ -36,7 +34,6 @@ public extension PaywallFlowDelegate {
     func didSkipPaywall() {}
     func didUpdatePremiumStatus(isPremium: Bool, customerInfo: CustomerInfo?) {}
     func didEncounterError(_ error: Error) {}
-    func shouldSendAnalytics(eventName: String, parameters: [String : Any]) {}
 }
 
 // MARK: - PaywallEvent

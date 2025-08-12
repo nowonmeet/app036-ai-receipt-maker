@@ -9,18 +9,18 @@ struct PaywallPageView: View {
     
     init() {
         let config = PaywallConfiguration(
-            revenueCatAPIKey: "appl_bPrLQLKIcCNqkFYqmUheReHuvJh", // Same API key as in UniversalPaywallManager
-            premiumEntitlementKey: "premium_features",
-            theme: .reading,
+            revenueCatAPIKey: "appl_eKuEEsPvpzKyMHFZeVlReOtBoBi", // AI Receipt Maker用APIキー
+            premiumEntitlementKey: "premium_plan",
+            theme: .receipt,              // レシートアプリ専用テーマ
             showCloseButton: true,
-            presentationMode: .embedded,  // Use embedded mode to avoid sheet conflicts
-            displayDelay: 0.0,
+            presentationMode: .sheet,     // シート表示
+            displayDelay: 1.0,
             debugMode: true
         )
         
         self._paywallManager = StateObject(wrappedValue: UniversalPaywallManager(
             configuration: config,
-            delegate: ReadingProgressPaywallDelegate.shared
+            delegate: ReceiptMakerPaywallDelegate.shared
         ))
     }
     
@@ -49,7 +49,7 @@ struct PaywallPageView: View {
     private var paywallContent: some View {
         Group {
             if let offering = paywallManager.currentOffering {
-                PaywallView(offering: offering, displayCloseButton: true)
+                RevenueCatUI.PaywallView(offering: offering)
                     .onRequestedDismissal {
                         if paywallManager.configuration.debugMode {
                             print("❌ [PaywallPageView] Dismiss requested via close button")
@@ -82,7 +82,7 @@ struct PaywallPageView: View {
                         paywallManager.handleError(error)
                     }
             } else {
-                PaywallView(displayCloseButton: true)
+                RevenueCatUI.PaywallView()
                     .onRequestedDismissal {
                         if paywallManager.configuration.debugMode {
                             print("❌ [PaywallPageView] Dismiss requested via close button (default offering)")

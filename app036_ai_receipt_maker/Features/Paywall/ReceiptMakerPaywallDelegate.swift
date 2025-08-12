@@ -2,14 +2,14 @@ import Foundation
 import RevenueCat
 import SwiftUI
 
-/// Reading Progress App用のペイウォールデリゲート実装
-/// 読書進捗管理アプリ固有のペイウォール処理を管理
-final class ReadingProgressPaywallDelegate: PaywallFlowDelegate {
+/// AI Receipt Maker用のペイウォールデリゲート実装
+/// レシート作成アプリ固有のペイウォール処理を管理
+final class ReceiptMakerPaywallDelegate: PaywallFlowDelegate {
     
     // MARK: - Properties
     
     /// シングルトンインスタンス
-    static let shared = ReadingProgressPaywallDelegate()
+    static let shared = ReceiptMakerPaywallDelegate()
     
     /// 成功メッセージ表示用のバインディング
     @Published var showSuccessAlert = false
@@ -25,16 +25,16 @@ final class ReadingProgressPaywallDelegate: PaywallFlowDelegate {
     // MARK: - PaywallFlowDelegate Implementation
     
     func willShowPaywall() {
-        print("📚 Reading Progress: Paywall display starting")
+        print("📄 AI Receipt Maker: Paywall display starting")
     }
     
     func didShowPaywall() {
-        print("📱 Reading Progress: Paywall display completed")
+        print("📱 AI Receipt Maker: Paywall display completed")
     }
     
     func didCompletePurchase(customerInfo: CustomerInfo) {
-        print("========== [ReadingProgressPaywallDelegate] Purchase completion started ==========")
-        print("🎉 Reading Progress: Purchase completed")
+        print("========== [ReceiptMakerPaywallDelegate] Purchase completion started ==========")
+        print("🎉 AI Receipt Maker: Purchase completed")
         print("  - Customer ID: \(customerInfo.originalAppUserId)")
         print("  - Active Subscriptions: \(customerInfo.activeSubscriptions)")
         print("  - Non Subscriptions: \(customerInfo.nonSubscriptions)")
@@ -45,60 +45,55 @@ final class ReadingProgressPaywallDelegate: PaywallFlowDelegate {
             print("  - Entitlement[\(key)]: isActive=\(entitlement.isActive), willRenew=\(entitlement.willRenew)")
         }
         
-        // Update premium status for book management
+        // Update premium status for receipt features
         Task {
-            await updateBookLimitServicePremiumStatus(true)
+            await updateReceiptFeaturePremiumStatus(true)
         }
         
         // Show success message
-        showSuccessMessage("Premium features are now available!\nEnjoy unlimited book tracking and advanced statistics.")
+        showSuccessMessage("Premium features are now available!\nEnjoy unlimited receipt generation and advanced features.")
         
-        print("========== [ReadingProgressPaywallDelegate] Purchase completion finished ==========")
+        print("========== [ReceiptMakerPaywallDelegate] Purchase completion finished ==========")
     }
     
     func didCompleteRestore(customerInfo: CustomerInfo) {
-        print("🔄 Reading Progress: Restore completed")
+        print("🔄 AI Receipt Maker: Restore completed")
         print("  - Active Subscriptions: \(customerInfo.activeSubscriptions)")
         print("  - Non Subscriptions: \(customerInfo.nonSubscriptions)")
         
-        // Update premium status for book management
+        // Update premium status for receipt features
         Task {
-            await updateBookLimitServicePremiumStatus(true)
+            await updateReceiptFeaturePremiumStatus(true)
         }
         
         // Show restore success message
-        showSuccessMessage("Purchase history restored successfully!\nEnjoy unlimited book tracking and advanced statistics.")
+        showSuccessMessage("Purchase history restored successfully!\nEnjoy unlimited receipt generation and advanced features.")
     }
     
     func didCancelPaywall() {
-        print("❌ Reading Progress: Paywall cancelled")
+        print("❌ AI Receipt Maker: Paywall cancelled")
     }
     
     func didSkipPaywall() {
-        print("⏭️ Reading Progress: Paywall skipped")
+        print("⏭️ AI Receipt Maker: Paywall skipped")
     }
     
     func didUpdatePremiumStatus(isPremium: Bool, customerInfo: CustomerInfo?) {
-        print("🔄 Reading Progress: Premium status updated - isPremium: \(isPremium)")
+        print("🔄 AI Receipt Maker: Premium status updated - isPremium: \(isPremium)")
         
-        // Update book management limits
+        // Update receipt generation limits
         Task {
-            await updateBookLimitServicePremiumStatus(isPremium)
+            await updateReceiptFeaturePremiumStatus(isPremium)
         }
     }
     
     func didEncounterError(_ error: Error) {
-        print("❌ Reading Progress: Error occurred - \(error.localizedDescription)")
+        print("❌ AI Receipt Maker: Error occurred - \(error.localizedDescription)")
         
         // Show error message
         showErrorMessage("An error occurred during the purchase process.\nPlease try again later.")
     }
     
-    func shouldSendAnalytics(eventName: String, parameters: [String: Any]) {
-        // Log analytics events (can be integrated with Firebase/other analytics later)
-        print("📊 Reading Progress: Analytics - \(eventName)")
-        print("  - Parameters: \(parameters)")
-    }
     
     // MARK: - Private Methods
     
@@ -120,37 +115,37 @@ final class ReadingProgressPaywallDelegate: PaywallFlowDelegate {
         }
     }
     
-    /// Update book limit service premium status
-    private func updateBookLimitServicePremiumStatus(_ isPremium: Bool) async {
-        print("🔄 Reading Progress: Book limit service premium status update started - isPremium: \(isPremium)")
+    /// Update receipt feature premium status
+    private func updateReceiptFeaturePremiumStatus(_ isPremium: Bool) async {
+        print("🔄 AI Receipt Maker: Receipt feature premium status update started - isPremium: \(isPremium)")
         
         // Send notification about premium status update
         await MainActor.run {
             NotificationCenter.default.post(
-                name: .premiumStatusUpdated,
+                name: .receiptMakerPremiumStatusUpdated,
                 object: nil,
                 userInfo: ["isPremium": isPremium]
             )
         }
-        print("📢 Reading Progress: Premium status update notification sent - isPremium: \(isPremium)")
+        print("📢 AI Receipt Maker: Premium status update notification sent - isPremium: \(isPremium)")
         
-        // Update local book management limits
-        updateLocalBookLimits(isPremium: isPremium)
+        // Update local receipt generation limits
+        updateLocalReceiptLimits(isPremium: isPremium)
     }
     
-    /// Update local book management limits
-    private func updateLocalBookLimits(isPremium: Bool) {
-        // Update book limit in UserDefaults or local storage
+    /// Update local receipt generation limits
+    private func updateLocalReceiptLimits(isPremium: Bool) {
+        // Update receipt limit in UserDefaults or local storage
         UserDefaults.standard.set(isPremium, forKey: "isPremiumUser")
         
         if isPremium {
-            print("📚 Reading Progress: Premium activated - Unlimited books enabled")
-            // Remove book count limits
-            UserDefaults.standard.set(-1, forKey: "maxBookCount") // -1 for unlimited
+            print("📄 AI Receipt Maker: Premium activated - Unlimited receipt generation enabled")
+            // Remove receipt count limits
+            UserDefaults.standard.set(-1, forKey: "maxReceiptCount") // -1 for unlimited
         } else {
-            print("📚 Reading Progress: Free tier - 10 book limit enforced")
-            // Set free tier limit
-            UserDefaults.standard.set(10, forKey: "maxBookCount")
+            print("📄 AI Receipt Maker: Free tier - Limited receipt generation enforced")
+            // Set free tier limit (e.g., 5 receipts per month)
+            UserDefaults.standard.set(5, forKey: "maxReceiptCount")
         }
         
         UserDefaults.standard.synchronize()
@@ -160,5 +155,5 @@ final class ReadingProgressPaywallDelegate: PaywallFlowDelegate {
 // MARK: - Notification Names
 
 extension Notification.Name {
-    static let premiumStatusUpdated = Notification.Name("premiumStatusUpdated")
+    static let receiptMakerPremiumStatusUpdated = Notification.Name("receiptMakerPremiumStatusUpdated")
 }

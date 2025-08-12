@@ -50,13 +50,6 @@ public struct PaywallConfiguration {
     /// デバッグモード（詳細ログ出力）
     public let debugMode: Bool
     
-    // MARK: - Analytics Configuration
-    
-    /// アナリティクス送信を有効にするか
-    public let enableAnalytics: Bool
-    
-    /// アナリティクストリガーソース名
-    public let analyticsTriggerSource: String
     
     // MARK: - Initializers
     
@@ -72,9 +65,7 @@ public struct PaywallConfiguration {
         skipButtonText: String = "Continue with Basic Features",
         presentationMode: PaywallPresentationMode = .sheet,
         displayDelay: TimeInterval = 1.0,
-        debugMode: Bool = false,
-        enableAnalytics: Bool = true,
-        analyticsTriggerSource: String = "book_limit"
+        debugMode: Bool = false
     ) {
         self.revenueCatAPIKey = revenueCatAPIKey
         self.premiumEntitlementKey = premiumEntitlementKey
@@ -87,8 +78,6 @@ public struct PaywallConfiguration {
         self.presentationMode = presentationMode
         self.displayDelay = displayDelay
         self.debugMode = debugMode
-        self.enableAnalytics = enableAnalytics
-        self.analyticsTriggerSource = analyticsTriggerSource
     }
     
     /// 全てのエンタイトルメントキーを取得（メイン + 代替）
@@ -160,6 +149,19 @@ public struct PaywallTheme {
             titleFont: .title.weight(.semibold),
             bodyFont: .body,
             buttonFont: .headline.weight(.medium)
+        )
+    )
+    
+    /// レシートアプリ専用テーマ
+    public static let receipt = PaywallTheme(
+        backgroundStyle: .gradient([Color.green.opacity(0.2), Color.teal.opacity(0.3), Color.mint.opacity(0.2)]),
+        primaryColor: .white,
+        secondaryColor: .green,
+        textColor: .white,
+        fontConfiguration: FontConfiguration(
+            titleFont: .title.weight(.bold),
+            bodyFont: .body,
+            buttonFont: .headline.weight(.semibold)
         )
     )
 }

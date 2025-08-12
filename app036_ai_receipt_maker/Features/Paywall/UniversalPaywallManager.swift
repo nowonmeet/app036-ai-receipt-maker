@@ -13,17 +13,17 @@ public final class UniversalPaywallManager: NSObject, ObservableObject {
     /// シングルトンインスタンス（アプリ全体で共有）
     public static let shared: UniversalPaywallManager = {
         let config = PaywallConfiguration(
-            revenueCatAPIKey: "appl_bPrLQLKIcCNqkFYqmUheReHuvJh", // TODO: RevenueCat Dashboard > API Keys から実際のAPIキーを設定
-            premiumEntitlementKey: "premium_features",
-            theme: .reading,             // 読書アプリ専用テーマ
+            revenueCatAPIKey: "appl_eKuEEsPvpzKyMHFZeVlReOtBoBi", // AI Receipt Maker用APIキー
+            premiumEntitlementKey: "premium_plan",
+            theme: .receipt,             // レシートアプリ専用テーマ
             showCloseButton: true,
-            presentationMode: .embedded,  // ContentViewでシート表示するため、埋め込みモードに変更
-            displayDelay: 0.0,           // 即座に表示
+            presentationMode: .sheet,    // シート表示
+            displayDelay: 1.0,           // 1秒の遅延
             debugMode: true
         )
         return UniversalPaywallManager(
             configuration: config,
-            delegate: ReadingProgressPaywallDelegate.shared
+            delegate: ReceiptMakerPaywallDelegate.shared
         )
     }()
     
@@ -114,16 +114,14 @@ public final class UniversalPaywallManager: NSObject, ObservableObject {
             return
         }
         
-        let source = triggerSource ?? configuration.analyticsTriggerSource
+        let source = triggerSource ?? "unknown"
         self.triggerSource = source
         
         delegate?.willShowPaywall()
-        sendAnalyticsIfNeeded(event: .willShow)
         
         DispatchQueue.main.asyncAfter(deadline: .now() + configuration.displayDelay) {
             self.isShowingPaywall = true
             self.delegate?.didShowPaywall()
-            self.sendAnalyticsIfNeeded(event: .didShow)
         }
     }
     
@@ -145,7 +143,6 @@ public final class UniversalPaywallManager: NSObject, ObservableObject {
         }
         
         delegate?.didCancelPaywall()
-        sendAnalyticsIfNeeded(event: .cancelled)
         
         if configuration.debugMode {
             print("🚪 [PaywallManager] Paywall dismiss process completed")
@@ -173,7 +170,6 @@ public final class UniversalPaywallManager: NSObject, ObservableObject {
         }
         
         delegate?.didCompletePurchase(customerInfo: customerInfo)
-        sendAnalyticsIfNeeded(event: .purchaseCompleted(customerInfo))
         
         // バックグラウンドで課金状態を確実に更新
         subscriptionManager.forcePremiumActivation()
@@ -197,7 +193,6 @@ public final class UniversalPaywallManager: NSObject, ObservableObject {
         }
         
         delegate?.didCompleteRestore(customerInfo: customerInfo)
-        sendAnalyticsIfNeeded(event: .restoreCompleted(customerInfo))
         
         // バックグラウンドで課金状態を確実に更新
         subscriptionManager.forcePremiumActivation()
@@ -211,7 +206,6 @@ public final class UniversalPaywallManager: NSObject, ObservableObject {
         
         isShowingPaywall = false
         delegate?.didSkipPaywall()
-        sendAnalyticsIfNeeded(event: .skipped)
     }
     
     /// エラー処理
@@ -223,7 +217,6 @@ public final class UniversalPaywallManager: NSObject, ObservableObject {
         
         self.error = error.localizedDescription
         delegate?.didEncounterError(error)
-        sendAnalyticsIfNeeded(event: .errorOccurred(error))
     }
     
     /// エラー状態をクリア
@@ -384,9 +377,6 @@ public final class UniversalPaywallManager: NSObject, ObservableObject {
                         isPremium: isPremium,
                         customerInfo: nil
                     )
-                    self.sendAnalyticsIfNeeded(
-                        event: .premiumStatusUpdated(isPremium, nil)
-                    )
                 }
             }
             .store(in: &cancellables)
@@ -404,16 +394,6 @@ public final class UniversalPaywallManager: NSObject, ObservableObject {
                 self?.error = errorMessage
             }
             .store(in: &cancellables)
-    }
-    
-    /// アナリティクス送信（設定で有効な場合のみ）
-    private func sendAnalyticsIfNeeded(event: PaywallEvent) {
-        guard configuration.enableAnalytics else { return }
-        
-        delegate?.shouldSendAnalytics(
-            eventName: event.eventName,
-            parameters: event.parameters
-        )
     }
 }
 

@@ -101,10 +101,6 @@ public struct UniversalPaywallView: View {
             if configuration.showSkipButton {
                 Button(configuration.skipButtonText) {
                     // Analytics: Paywall スキップインタラクション
-                    if let appearTime = paywallAppearTime {
-                        let timeSpent = Date().timeIntervalSince(appearTime)
-                        AnalyticsService.shared.logPaywallInteraction("skip_button", timeSpent: timeSpent)
-                    }
                     
                     paywallManager.handleSkip()
                 }
@@ -119,7 +115,7 @@ public struct UniversalPaywallView: View {
     private var paywallSheetContent: some View {
         Group {
             if let offering = preloadedOffering {
-                PaywallView(offering: offering, displayCloseButton: configuration.showCloseButton)
+                RevenueCatUI.PaywallView(offering: offering)
                     .onAppear {
                         if configuration.debugMode {
                             print("🎯 特定のOfferingでPaywallViewを表示:")
@@ -129,7 +125,7 @@ public struct UniversalPaywallView: View {
                         }
                     }
             } else {
-                PaywallView(displayCloseButton: configuration.showCloseButton)
+                RevenueCatUI.PaywallView()
                     .onAppear {
                         if configuration.debugMode {
                             print("🎯 デフォルトのPaywallViewを表示（フォールバック）")
@@ -162,10 +158,6 @@ public struct UniversalPaywallView: View {
             }
             .onPurchaseStarted { packageType in
                 // Analytics: 購入開始インタラクション
-                if let appearTime = paywallAppearTime {
-                    let timeSpent = Date().timeIntervalSince(appearTime)
-                    AnalyticsService.shared.logPaywallInteraction("purchase_started", timeSpent: timeSpent)
-                }
                 
                 // 購入開始時の処理
                 if configuration.debugMode {
@@ -224,11 +216,6 @@ public struct UniversalPaywallView: View {
         let installDate = UserDefaults.standard.object(forKey: "app_install_date") as? Date ?? Date()
         let daysSinceInstall = Calendar.current.dateComponents([.day], from: installDate, to: Date()).day ?? 0
         
-        AnalyticsService.shared.logPaywallShown(
-            trigger: trigger,
-            bookCount: bookCount,
-            daysSinceInstall: daysSinceInstall
-        )
         
         // Offeringsを事前にロードしてからペイウォールを表示
         Task {
@@ -322,8 +309,6 @@ public struct UniversalPaywallView: View {
         guard let appearTime = paywallAppearTime else { return }
         let timeSpent = Date().timeIntervalSince(appearTime)
         
-        // Analytics: Paywall離脱イベント
-        AnalyticsService.shared.logPaywallInteraction("view_dismissed", timeSpent: timeSpent)
         
         paywallAppearTime = nil
         

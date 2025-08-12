@@ -73,9 +73,6 @@ struct GenerateReceiptView: View {
             .onReceive(mainViewModel.$errorMessage) { errorMessage in
                 showingError = errorMessage != nil
             }
-            .sheet(isPresented: $mainViewModel.showPaywall) {
-                PaywallView()
-            }
         }
     }
 }

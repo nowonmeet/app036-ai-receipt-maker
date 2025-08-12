@@ -12,7 +12,6 @@ final class MainViewModel: ObservableObject {
     @Published var receipts: [ReceiptData] = []
     @Published var isGenerating = false
     @Published var errorMessage: String?
-    @Published var showPaywall = false
     
     private let dalleService: DALLEServiceProtocol
     private let subscriptionService: SubscriptionServiceProtocol
@@ -48,7 +47,7 @@ final class MainViewModel: ObservableObject {
         // Check usage limits first
         let canGenerate = await checkUsageLimit()
         guard canGenerate else {
-            showPaywall = true
+            UniversalPaywallManager.shared.showPaywall(triggerSource: "usage_limit_reached")
             return
         }
         
@@ -126,9 +125,6 @@ final class MainViewModel: ObservableObject {
         errorMessage = nil
     }
     
-    func dismissPaywall() {
-        showPaywall = false
-    }
     
     // MARK: - Private Methods
     

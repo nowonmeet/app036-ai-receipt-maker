@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct MainTabView: View {
+    @ObservedObject private var paywallManager = UniversalPaywallManager.shared
+    
     var body: some View {
         TabView {
             GenerateReceiptView()
@@ -27,6 +29,9 @@ struct MainTabView: View {
                     Image(systemName: "gearshape")
                     Text("Settings")
                 }
+        }
+        .sheet(isPresented: $paywallManager.isShowingPaywall) {
+            UniversalPaywallView(paywallManager: paywallManager)
         }
     }
 }
