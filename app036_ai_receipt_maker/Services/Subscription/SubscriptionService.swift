@@ -9,47 +9,70 @@ import Foundation
 
 final class SubscriptionService: SubscriptionServiceProtocol {
     
-    private var _isPremiumUser: Bool = false
-    
     var isPremiumUser: Bool {
-        return _isPremiumUser
+        // UniversalPaywallManagerの課金状態を直接参照
+        let isPremium = UniversalPaywallManager.shared.isPremiumActive
+        
+        // デバッグログ
+        print("🔍 [SubscriptionService] isPremiumUser check:")
+        print("  - UniversalPaywallManager.isPremiumActive: \(isPremium)")
+        
+        return isPremium
     }
     
     init() {
         // Initialize subscription service
-        // In a real implementation, this would configure RevenueCat SDK
+        // UniversalPaywallManagerはapp036_ai_receipt_makerApp.swiftで初期化済み
+        print("✅ [SubscriptionService] Initialized as proxy to UniversalPaywallManager")
     }
     
     func checkSubscriptionStatus() async throws -> Bool {
-        // In a real implementation, this would check with RevenueCat
-        // For now, return the current local status
+        // UniversalPaywallManagerの状態をチェック
+        await MainActor.run {
+            UniversalPaywallManager.shared.checkSubscriptionStatus()
+        }
         
-        // Simulate network delay
+        // 少し待機して状態更新を待つ
         try await Task.sleep(nanoseconds: 100_000_000) // 0.1 seconds
         
-        // This would normally make an API call to RevenueCat
-        return _isPremiumUser
+        let status = UniversalPaywallManager.shared.isPremiumActive
+        print("🔍 [SubscriptionService] checkSubscriptionStatus: \(status)")
+        
+        return status
     }
     
     func presentPaywall() async throws {
-        // In a real implementation, this would present RevenueCat's paywall
-        // For now, simulate a successful paywall presentation
+        // UniversalPaywallManagerのペイウォールを表示
+        await MainActor.run {
+            UniversalPaywallManager.shared.showPaywall(triggerSource: "manual_presentation")
+        }
         
-        // Simulate network delay
+        // ペイウォール表示の完了を待つ
         try await Task.sleep(nanoseconds: 200_000_000) // 0.2 seconds
         
-        // This would normally trigger RevenueCat's paywall UI
-        // and handle the purchase flow
+        print("✅ [SubscriptionService] Paywall presented via UniversalPaywallManager")
     }
     
     // MARK: - Additional Methods for Testing and State Management
     
     func updateSubscriptionStatus(isPremium: Bool) {
-        _isPremiumUser = isPremium
+        // テスト用：UniversalPaywallManagerのデバッグメソッドを使用
+        #if DEBUG
+        if isPremium {
+            UniversalPaywallManager.shared.setPremiumForDebug()
+        } else {
+            UniversalPaywallManager.shared.resetToFreeUserForDebug()
+        }
+        print("🔧 [SubscriptionService] Debug update: isPremium = \(isPremium)")
+        #endif
     }
     
     func handleSubscriptionExpiration() {
-        _isPremiumUser = false
+        // UniversalPaywallManagerをフリーユーザーにリセット
+        #if DEBUG
+        UniversalPaywallManager.shared.resetToFreeUserForDebug()
+        print("🔧 [SubscriptionService] Debug: Subscription expired")
+        #endif
     }
     
     func validatePurchase(transactionId: String) async -> Bool {
@@ -57,31 +80,25 @@ final class SubscriptionService: SubscriptionServiceProtocol {
             return false
         }
         
-        // Simulate validation process
-        try? await Task.sleep(nanoseconds: 300_000_000) // 0.3 seconds
+        // UniversalPaywallManagerの状態を確認
+        let isPremium = UniversalPaywallManager.shared.isPremiumActive
+        print("🔍 [SubscriptionService] validatePurchase: transactionId=\(transactionId), isPremium=\(isPremium)")
         
-        // In a real implementation, this would validate with RevenueCat/Apple
-        return true
+        return isPremium
     }
     
     func restorePurchases() async -> Bool {
-        // Simulate restore purchases process
+        // UniversalPaywallManagerを通じてリストア
+        await MainActor.run {
+            UniversalPaywallManager.shared.checkSubscriptionStatus()
+        }
+        
+        // リストア処理の完了を待つ
         try? await Task.sleep(nanoseconds: 250_000_000) // 0.25 seconds
         
-        // In a real implementation, this would restore through RevenueCat
-        // For now, return false as no purchases exist
-        return false
-    }
-    
-    // MARK: - RevenueCat Integration Placeholders
-    
-    private func configureRevenueCat() {
-        // This would initialize RevenueCat SDK with API key
-        // RevenueCat.configure(withAPIKey: "your_api_key")
-    }
-    
-    private func setupPurchaseListeners() {
-        // This would set up listeners for purchase events
-        // RevenueCat.shared.delegate = self
+        let restored = UniversalPaywallManager.shared.isPremiumActive
+        print("🔍 [SubscriptionService] restorePurchases: restored=\(restored)")
+        
+        return restored
     }
 }

@@ -20,6 +20,16 @@ final class MockUsageRepository: UsageRepositoryProtocol {
             usage.generationCount = 2 // Exceed free limit
             return usage
         }
+        
+        // モックでもプレミアム状態を同期（本番コードの動作を再現）
+        if let usage = mockUsage {
+            // UniversalPaywallManagerの状態を反映
+            // テスト環境では通常falseなので、テスト時は明示的に設定する
+            print("📊 [MockUsageRepository] getTodayUsage:")
+            print("  - Stored isPremiumUser: \(usage.isPremiumUser)")
+            print("  - Daily limit: \(usage.dailyLimit)")
+        }
+        
         return mockUsage
     }
     

@@ -39,7 +39,7 @@ final class DALLEService: DALLEServiceProtocol {
             model: "gpt-image-1",
             prompt: prompt,
             n: 1,
-            quality: "low",
+            quality: "medium",
             size: "1024x1024"
         )
         

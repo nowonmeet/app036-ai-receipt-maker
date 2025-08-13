@@ -47,9 +47,12 @@ final class MainViewModel: ObservableObject {
         // Check usage limits first
         let canGenerate = await checkUsageLimit()
         guard canGenerate else {
+            print("⚠️ [MainViewModel] Usage limit reached, showing paywall")
             UniversalPaywallManager.shared.showPaywall(triggerSource: "usage_limit_reached")
             return
         }
+        
+        print("✅ [MainViewModel] Usage limit check passed, proceeding with generation")
         
         isGenerating = true
         errorMessage = nil
@@ -111,12 +114,23 @@ final class MainViewModel: ObservableObject {
     func checkUsageLimit() async -> Bool {
         do {
             guard let usage = try usageRepository.getTodayUsage() else {
+                print("📊 [MainViewModel] No usage today, can generate")
                 return true // No usage today, can generate
             }
             
-            return usage.canGenerate()
+            let canGenerate = usage.canGenerate()
+            let isPremium = subscriptionService.isPremiumUser
+            
+            print("📊 [MainViewModel] Usage limit check:")
+            print("  - Current count: \(usage.generationCount)")
+            print("  - Daily limit: \(usage.dailyLimit)")
+            print("  - Is Premium: \(isPremium)")
+            print("  - Can generate: \(canGenerate)")
+            
+            return canGenerate
         } catch {
             errorMessage = error.localizedDescription
+            print("❌ [MainViewModel] Usage limit check error: \(error.localizedDescription)")
             return false
         }
     }
