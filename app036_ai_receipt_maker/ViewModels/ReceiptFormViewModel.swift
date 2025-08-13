@@ -12,6 +12,8 @@ final class ReceiptFormViewModel: ObservableObject {
     @Published var storeName = ""
     @Published var address = ""
     @Published var phoneNumber = ""
+    @Published var receiptDate = Date()
+    @Published var useCustomDate = false
     @Published var items: [ReceiptItemInput] = []
     @Published var useRandomData = true
     
@@ -49,6 +51,8 @@ final class ReceiptFormViewModel: ObservableObject {
         storeName = ""
         address = ""
         phoneNumber = ""
+        receiptDate = Date()
+        useCustomDate = false
         items.removeAll()
         useRandomData = true
     }
@@ -82,6 +86,7 @@ final class ReceiptFormViewModel: ObservableObject {
             storeName: cleanStoreName.isEmpty ? "Store" : cleanStoreName,
             address: cleanAddress.isEmpty ? nil : cleanAddress,
             phoneNumber: cleanPhoneNumber.isEmpty ? nil : cleanPhoneNumber,
+            receiptDate: useCustomDate ? receiptDate : nil,
             currency: currencyFormatter.currencyCode
         )
         

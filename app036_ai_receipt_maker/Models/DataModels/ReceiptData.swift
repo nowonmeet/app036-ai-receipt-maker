@@ -14,6 +14,7 @@ final class ReceiptData {
     var storeName: String?
     var address: String?
     var phoneNumber: String?
+    var receiptDate: Date?
     var items: [ReceiptItem]
     var totalAmount: Decimal?
     var currency: String
@@ -27,11 +28,12 @@ final class ReceiptData {
         return true
     }
     
-    init(storeName: String? = nil, address: String? = nil, phoneNumber: String? = nil, currency: String = "USD") {
+    init(storeName: String? = nil, address: String? = nil, phoneNumber: String? = nil, receiptDate: Date? = nil, currency: String = "USD") {
         self.id = UUID()
         self.storeName = storeName
         self.address = address
         self.phoneNumber = phoneNumber
+        self.receiptDate = receiptDate
         self.items = []
         self.totalAmount = nil
         self.currency = currency

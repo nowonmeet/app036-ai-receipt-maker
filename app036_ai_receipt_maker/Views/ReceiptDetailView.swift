@@ -54,7 +54,11 @@ struct ReceiptDetailView: View {
                                 DetailRow(title: "Phone", value: phoneNumber)
                             }
                             
-                            DetailRow(title: "Date", value: receipt.createdAt.formatted(date: .abbreviated, time: .shortened))
+                            if let receiptDate = receipt.receiptDate {
+                                DetailRow(title: "Receipt Date", value: receiptDate.formatted(date: .abbreviated, time: .shortened))
+                            }
+                            
+                            DetailRow(title: "Created", value: receipt.createdAt.formatted(date: .abbreviated, time: .shortened))
                             DetailRow(title: "Currency", value: receipt.currency)
                         }
                         
@@ -197,6 +201,7 @@ struct DetailRow: View {
             storeName: "Coffee Shop", 
             address: "123 Main St, City, State 12345",
             phoneNumber: "(555) 123-4567",
+            receiptDate: Calendar.current.date(byAdding: .hour, value: -2, to: Date()),
             currency: "USD"
         )
         r.items = [

@@ -36,6 +36,18 @@ struct ReceiptFormView: View {
                 TextField("Phone Number (Optional)", text: $viewModel.phoneNumber)
                     .textFieldStyle(.roundedBorder)
                     .keyboardType(.phonePad)
+                
+                // Date & Time Section
+                VStack(alignment: .leading, spacing: 8) {
+                    Toggle("Use Custom Date & Time", isOn: $viewModel.useCustomDate)
+                        .font(.subheadline)
+                    
+                    if viewModel.useCustomDate {
+                        DatePicker("Receipt Date & Time", selection: $viewModel.receiptDate, displayedComponents: [.date, .hourAndMinute])
+                            .datePickerStyle(.compact)
+                            .font(.subheadline)
+                    }
+                }
             }
             
             // Items Section

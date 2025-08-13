@@ -114,6 +114,15 @@ final class DALLEService: DALLEServiceProtocol {
         
         prompt += ". "
         
+        // 日付・時間の追加
+        if let receiptDate = receiptData.receiptDate {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateStyle = .medium
+            dateFormatter.timeStyle = .short
+            let formattedDate = dateFormatter.string(from: receiptDate)
+            prompt += "Receipt date and time: \(formattedDate). "
+        }
+        
         // アイテムの詳細
         if !receiptData.items.isEmpty {
             prompt += "Items purchased: "
@@ -141,6 +150,9 @@ final class DALLEService: DALLEServiceProtocol {
         }
         if receiptData.phoneNumber?.isEmpty != false {
             prompt += "Include a realistic phone number for the store. "
+        }
+        if receiptData.receiptDate == nil {
+            prompt += "Use a realistic current date and time for the receipt. "
         }
         
         prompt += "Make it look like a real thermal receipt with complete store header including name"
