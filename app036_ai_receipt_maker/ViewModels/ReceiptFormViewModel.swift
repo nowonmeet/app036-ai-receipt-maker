@@ -10,6 +10,8 @@ import Foundation
 @MainActor
 final class ReceiptFormViewModel: ObservableObject {
     @Published var storeName = ""
+    @Published var address = ""
+    @Published var phoneNumber = ""
     @Published var items: [ReceiptItemInput] = []
     @Published var useRandomData = true
     
@@ -20,10 +22,17 @@ final class ReceiptFormViewModel: ObservableObject {
             return true
         }
         
-        guard !storeName.isEmpty else { return false }
-        guard !items.isEmpty else { return false }
+        // 店名のみ必須、他はオプショナル
+        guard !storeName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { 
+            return false 
+        }
         
-        return items.allSatisfy { $0.isValid }
+        // アイテムがある場合はバリデーション
+        if !items.isEmpty {
+            return items.allSatisfy { $0.isValid }
+        }
+        
+        return true // アイテムが空でもOK（AIに委ねる）
     }
     
     func addItem() {
@@ -38,6 +47,8 @@ final class ReceiptFormViewModel: ObservableObject {
     
     func clearForm() {
         storeName = ""
+        address = ""
+        phoneNumber = ""
         items.removeAll()
         useRandomData = true
     }
@@ -63,17 +74,26 @@ final class ReceiptFormViewModel: ObservableObject {
     // MARK: - Private Methods
     
     private func createUserReceiptData() -> ReceiptData {
+        let cleanStoreName = storeName.trimmingCharacters(in: .whitespacesAndNewlines)
+        let cleanAddress = address.trimmingCharacters(in: .whitespacesAndNewlines)
+        let cleanPhoneNumber = phoneNumber.trimmingCharacters(in: .whitespacesAndNewlines)
+        
         let receiptData = ReceiptData(
-            storeName: storeName.isEmpty ? "Store" : storeName,
+            storeName: cleanStoreName.isEmpty ? "Store" : cleanStoreName,
+            address: cleanAddress.isEmpty ? nil : cleanAddress,
+            phoneNumber: cleanPhoneNumber.isEmpty ? nil : cleanPhoneNumber,
             currency: currencyFormatter.currencyCode
         )
         
-        receiptData.items = items.map { input in
-            ReceiptItem(
-                name: input.name.isEmpty ? "Item" : input.name,
-                price: Decimal(input.price),
-                quantity: input.quantity
-            )
+        // アイテムが入力されている場合のみ設定（空の場合はAIに委ねる）
+        if !items.isEmpty {
+            receiptData.items = items.map { input in
+                ReceiptItem(
+                    name: input.name.isEmpty ? "Item" : input.name,
+                    price: Decimal(input.price),
+                    quantity: input.quantity
+                )
+            }
         }
         
         receiptData.calculateTotal()

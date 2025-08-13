@@ -100,8 +100,21 @@ final class DALLEService: DALLEServiceProtocol {
         let formatter = CurrencyFormatter(locale: Locale.current)
         let storeName = receiptData.storeName ?? "Generic Store"
         
-        var prompt = "Generate a realistic paper receipt from \(storeName). "
+        var prompt = "Generate a realistic paper receipt from \(storeName)"
         
+        // 住所の追加
+        if let address = receiptData.address, !address.isEmpty {
+            prompt += " located at \(address)"
+        }
+        
+        // 電話番号の追加  
+        if let phoneNumber = receiptData.phoneNumber, !phoneNumber.isEmpty {
+            prompt += " (Phone: \(phoneNumber))"
+        }
+        
+        prompt += ". "
+        
+        // アイテムの詳細
         if !receiptData.items.isEmpty {
             prompt += "Items purchased: "
             for item in receiptData.items {
@@ -117,9 +130,26 @@ final class DALLEService: DALLEServiceProtocol {
                 let formattedTotal = formatter.format(total)
                 prompt += "Total: \(formattedTotal). "
             }
+        } else {
+            // アイテムが指定されていない場合はAIに委ねる
+            prompt += "Include appropriate items and prices for this type of store. "
         }
         
-        prompt += "Make it look like a real thermal receipt with store header, itemized list, tax information, and total. Include realistic details like date, time, cashier name, and receipt number. Make sure the texture of the paper is visible, and add a crease from folding it in half lengthwise and some wrinkles like you would get from putting it in a pocket."
+        // 住所や電話番号が未指定の場合の指示
+        if receiptData.address?.isEmpty != false {
+            prompt += "Include a realistic address for the store. "
+        }
+        if receiptData.phoneNumber?.isEmpty != false {
+            prompt += "Include a realistic phone number for the store. "
+        }
+        
+        prompt += "Make it look like a real thermal receipt with complete store header including name"
+        
+        if receiptData.address?.isEmpty != false || receiptData.phoneNumber?.isEmpty != false {
+            prompt += ", address, and phone number"
+        }
+        
+        prompt += ", itemized list with realistic items if not specified, tax information, and total. Include realistic details like date, time, cashier name, and receipt number. Make sure the texture of the paper is visible, and add a crease from folding it in half lengthwise and some wrinkles like you would get from putting it in a pocket."
         
         return prompt
     }

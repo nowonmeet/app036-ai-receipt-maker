@@ -45,6 +45,15 @@ struct ReceiptDetailView: View {
                         
                         Group {
                             DetailRow(title: "Store", value: receipt.storeName ?? "Unknown")
+                            
+                            if let address = receipt.address, !address.isEmpty {
+                                DetailRow(title: "Address", value: address)
+                            }
+                            
+                            if let phoneNumber = receipt.phoneNumber, !phoneNumber.isEmpty {
+                                DetailRow(title: "Phone", value: phoneNumber)
+                            }
+                            
                             DetailRow(title: "Date", value: receipt.createdAt.formatted(date: .abbreviated, time: .shortened))
                             DetailRow(title: "Currency", value: receipt.currency)
                         }
@@ -184,7 +193,12 @@ struct DetailRow: View {
 
 #Preview {
     @Previewable @State var receipt: ReceiptData = {
-        let r = ReceiptData(storeName: "Coffee Shop", currency: "USD")
+        let r = ReceiptData(
+            storeName: "Coffee Shop", 
+            address: "123 Main St, City, State 12345",
+            phoneNumber: "(555) 123-4567",
+            currency: "USD"
+        )
         r.items = [
             ReceiptItem(name: "Coffee", price: 4.99, quantity: 1),
             ReceiptItem(name: "Muffin", price: 3.50, quantity: 2)
