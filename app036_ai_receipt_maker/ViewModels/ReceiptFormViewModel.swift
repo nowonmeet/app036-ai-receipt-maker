@@ -47,6 +47,28 @@ final class ReceiptFormViewModel: ObservableObject {
         items.remove(at: index)
     }
     
+    func updateItemQuantity(at index: Int, quantity: Int) {
+        guard items.indices.contains(index) else { return }
+        items[index].quantity = quantity
+        objectWillChange.send()
+    }
+    
+    func incrementItemQuantity(at index: Int) {
+        guard items.indices.contains(index) else { return }
+        if items[index].quantity < 99 {
+            items[index].quantity += 1
+            objectWillChange.send()
+        }
+    }
+    
+    func decrementItemQuantity(at index: Int) {
+        guard items.indices.contains(index) else { return }
+        if items[index].quantity > 1 {
+            items[index].quantity -= 1
+            objectWillChange.send()
+        }
+    }
+    
     func clearForm() {
         storeName = ""
         address = ""

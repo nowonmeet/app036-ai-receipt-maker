@@ -85,23 +85,63 @@ struct ReceiptFormView: View {
                             .font(.caption)
                         }
                         
-                        HStack {
-                            TextField("Price", value: $viewModel.items[index].price, format: .number)
-                                .textFieldStyle(.roundedBorder)
-                                .frame(width: 100)
+                        HStack(spacing: 8) {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Price")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                TextField("0.00", value: $viewModel.items[index].price, format: .number)
+                                    .textFieldStyle(.roundedBorder)
+                                    .frame(width: 80)
+                            }
                             
                             Text("×")
                                 .foregroundColor(.secondary)
+                                .padding(.top, 20)
                             
-                            Stepper("Qty: \(viewModel.items[index].quantity)", 
-                                   value: $viewModel.items[index].quantity, 
-                                   in: 1...99)
-                                .frame(width: 120)
+                            VStack(alignment: .center, spacing: 4) {
+                                Text("Qty")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                HStack {
+                                    Button(action: {
+                                        viewModel.decrementItemQuantity(at: index)
+                                    }) {
+                                        Text("-")
+                                            .foregroundColor(.primary)
+                                            .fontWeight(.medium)
+                                    }
+                                    .frame(width: 30, height: 30)
+                                    .background(Color.gray.opacity(0.2))
+                                    .cornerRadius(6)
+                                    
+                                    Text("\(viewModel.items[index].quantity)")
+                                        .frame(minWidth: 30)
+                                        .fontWeight(.medium)
+                                    
+                                    Button(action: {
+                                        viewModel.incrementItemQuantity(at: index)
+                                    }) {
+                                        Text("+")
+                                            .foregroundColor(.primary)
+                                            .fontWeight(.medium)
+                                    }
+                                    .frame(width: 30, height: 30)
+                                    .background(Color.gray.opacity(0.2))
+                                    .cornerRadius(6)
+                                }
+                            }
                             
                             Spacer()
                             
-                            Text(viewModel.formatPrice(Decimal(viewModel.items[index].price) * Decimal(viewModel.items[index].quantity)))
-                                .fontWeight(.semibold)
+                            VStack(alignment: .trailing, spacing: 4) {
+                                Text("Total")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                Text(viewModel.formatPrice(Decimal(viewModel.items[index].price) * Decimal(viewModel.items[index].quantity)))
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(.primary)
+                            }
                         }
                     }
                     .padding(.vertical, 4)
