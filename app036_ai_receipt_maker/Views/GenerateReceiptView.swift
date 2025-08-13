@@ -13,6 +13,7 @@ struct GenerateReceiptView: View {
     @EnvironmentObject private var mainViewModel: MainViewModel
     @StateObject private var formViewModel = ReceiptFormViewModel()
     @State private var showingError = false
+    @State private var isPremium = UniversalPaywallManager.shared.isPremiumActive
     
     var body: some View {
         NavigationView {
@@ -23,7 +24,7 @@ struct GenerateReceiptView: View {
                     .padding()
                 
                 // Usage status display
-                UsageStatusView(isPremium: UniversalPaywallManager.shared.isPremiumActive)
+                UsageStatusView(isPremium: isPremium)
                     .padding(.horizontal)
                 
                 if formViewModel.useRandomData {
@@ -76,6 +77,9 @@ struct GenerateReceiptView: View {
             }
             .onReceive(mainViewModel.$errorMessage) { errorMessage in
                 showingError = errorMessage != nil
+            }
+            .onAppear {
+                isPremium = UniversalPaywallManager.shared.isPremiumActive
             }
         }
     }

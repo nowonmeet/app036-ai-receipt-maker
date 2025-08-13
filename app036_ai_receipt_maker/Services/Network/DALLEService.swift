@@ -119,7 +119,7 @@ final class DALLEService: DALLEServiceProtocol {
             }
         }
         
-        prompt += "Make it look like a real thermal receipt with store header, itemized list, tax information, and total. Include realistic details like date, time, cashier name, and receipt number. Make the paper texture visible and slightly worn."
+        prompt += "Make it look like a real thermal receipt with store header, itemized list, tax information, and total. Include realistic details like date, time, cashier name, and receipt number. Make sure the texture of the paper is visible, and add a crease from folding it in half lengthwise and some wrinkles like you would get from putting it in a pocket."
         
         return prompt
     }

@@ -15,21 +15,25 @@ struct ReceiptDetailView: View {
     @EnvironmentObject private var mainViewModel: MainViewModel
     @State private var showingSaveAlert = false
     @State private var saveMessage = ""
+    @State private var isSaving = false
+    @State private var isPremium = UniversalPaywallManager.shared.isPremiumActive
+    
+    private let photoSaveService: PhotoSaveServiceProtocol
+    
+    init(receipt: ReceiptData, photoSaveService: PhotoSaveServiceProtocol = PhotoSaveService()) {
+        self.receipt = receipt
+        self.photoSaveService = photoSaveService
+    }
     
     var body: some View {
         NavigationView {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
                     if receipt.isGenerated && !receipt.imageFileName.isEmpty {
-                        AsyncImage(url: imageURL) { image in
-                            image
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                        } placeholder: {
-                            Rectangle()
-                                .fill(Color.gray.opacity(0.3))
-                                .overlay(ProgressView())
-                        }
+                        WatermarkedImageView(
+                            imageURL: imageURL,
+                            showWatermark: !isPremium
+                        )
                         .cornerRadius(12)
                         .shadow(radius: 4)
                     }
@@ -80,12 +84,27 @@ struct ReceiptDetailView: View {
                     .cornerRadius(12)
                     
                     if receipt.isGenerated {
-                        Button("Save to Photos") {
-                            saveToPhotos()
+                        Button(action: {
+                            Task {
+                                await saveToPhotos()
+                            }
+                        }) {
+                            HStack {
+                                if isSaving {
+                                    ProgressView()
+                                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                        .scaleEffect(0.8)
+                                    Text("Saving...")
+                                } else {
+                                    Image(systemName: "square.and.arrow.down")
+                                    Text("Save to Photos")
+                                }
+                            }
                         }
                         .buttonStyle(.borderedProminent)
                         .controlSize(.large)
                         .frame(maxWidth: .infinity)
+                        .disabled(isSaving)
                     }
                 }
                 .padding()
@@ -113,32 +132,36 @@ struct ReceiptDetailView: View {
         return documentsPath.appendingPathComponent(receipt.imageFileName)
     }
     
-    private func saveToPhotos() {
-        guard let imageURL = imageURL,
-              let imageData = try? Data(contentsOf: imageURL),
-              let uiImage = UIImage(data: imageData) else {
-            saveMessage = "Failed to load image"
-            showingSaveAlert = true
+    private func saveToPhotos() async {
+        guard let imageURL = imageURL else {
+            await MainActor.run {
+                saveMessage = "Failed to load image"
+                showingSaveAlert = true
+            }
             return
         }
         
-        PHPhotoLibrary.requestAuthorization { status in
-            DispatchQueue.main.async {
-                switch status {
-                case .authorized, .limited:
-                    UIImageWriteToSavedPhotosAlbum(uiImage, nil, nil, nil)
+        await MainActor.run {
+            isSaving = true
+        }
+        
+        do {
+            try await photoSaveService.saveImageToPhotos(imageURL: imageURL, isPremiumUser: isPremium)
+            
+            await MainActor.run {
+                if isPremium {
                     saveMessage = "Image saved to Photos"
-                    showingSaveAlert = true
-                case .denied, .restricted:
-                    saveMessage = "Photo Library access denied"
-                    showingSaveAlert = true
-                case .notDetermined:
-                    saveMessage = "Photo Library access not determined"
-                    showingSaveAlert = true
-                @unknown default:
-                    saveMessage = "Unknown Photo Library status"
-                    showingSaveAlert = true
+                } else {
+                    saveMessage = "Image saved to Photos with watermark"
                 }
+                showingSaveAlert = true
+                isSaving = false
+            }
+        } catch {
+            await MainActor.run {
+                saveMessage = "Failed to save image: \(error.localizedDescription)"
+                showingSaveAlert = true
+                isSaving = false
             }
         }
     }

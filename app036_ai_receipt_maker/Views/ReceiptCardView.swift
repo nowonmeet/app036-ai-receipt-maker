@@ -12,21 +12,15 @@ struct ReceiptCardView: View {
     let receipt: ReceiptData
     @EnvironmentObject private var mainViewModel: MainViewModel
     @State private var showingDetails = false
+    @State private var isPremium = UniversalPaywallManager.shared.isPremiumActive
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             if receipt.isGenerated && !receipt.imageFileName.isEmpty {
-                AsyncImage(url: imageURL) { image in
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                } placeholder: {
-                    Rectangle()
-                        .fill(Color.gray.opacity(0.3))
-                        .overlay(
-                            ProgressView()
-                        )
-                }
+                WatermarkedImageView(
+                    imageURL: imageURL,
+                    showWatermark: !isPremium
+                )
                 .frame(height: 120)
                 .cornerRadius(8)
             } else {
