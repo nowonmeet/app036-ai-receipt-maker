@@ -44,13 +44,13 @@ struct UsageTrackerTests {
         
         #expect(tracker.canGenerate() == true)
         
-        tracker.generationCount = 1
+        tracker.lifetimeUsageCount = 1
         #expect(tracker.canGenerate() == true)
         
-        tracker.generationCount = 2
+        tracker.lifetimeUsageCount = 2
         #expect(tracker.canGenerate() == false)
         
-        tracker.generationCount = 3
+        tracker.lifetimeUsageCount = 3
         #expect(tracker.canGenerate() == false)
     }
     
@@ -76,10 +76,10 @@ struct UsageTrackerTests {
         let freeTracker = UsageTracker(isPremiumUser: false)
         #expect(freeTracker.remainingGenerations == 2)
         
-        freeTracker.generationCount = 1
+        freeTracker.lifetimeUsageCount = 1
         #expect(freeTracker.remainingGenerations == 1)
         
-        freeTracker.generationCount = 2
+        freeTracker.lifetimeUsageCount = 2
         #expect(freeTracker.remainingGenerations == 0)
         
         let premiumTracker = UsageTracker(isPremiumUser: true)
@@ -98,5 +98,30 @@ struct UsageTrackerTests {
         
         let premiumTracker = UsageTracker(isPremiumUser: true)
         #expect(premiumTracker.dailyLimit == 10)
+    }
+    
+    @Test func testLifetimeUsageCountForFreeUser() throws {
+        let tracker = UsageTracker(isPremiumUser: false)
+        #expect(tracker.lifetimeUsageCount == 0)
+        
+        tracker.incrementCount()
+        #expect(tracker.lifetimeUsageCount == 1)
+        
+        tracker.incrementCount()
+        #expect(tracker.lifetimeUsageCount == 2)
+    }
+    
+    @Test func testIncrementCountForFreeAndPremiumUsers() throws {
+        // Free user increments lifetime count
+        let freeTracker = UsageTracker(isPremiumUser: false)
+        freeTracker.incrementCount()
+        #expect(freeTracker.lifetimeUsageCount == 1)
+        #expect(freeTracker.generationCount == 1)
+        
+        // Premium user only increments daily count
+        let premiumTracker = UsageTracker(isPremiumUser: true)
+        premiumTracker.incrementCount()
+        #expect(premiumTracker.lifetimeUsageCount == 0)
+        #expect(premiumTracker.generationCount == 1)
     }
 }

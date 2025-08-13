@@ -13,14 +13,21 @@ final class UsageTracker {
     var date: Date
     var generationCount: Int
     var isPremiumUser: Bool
+    var lifetimeUsageCount: Int = 0
+    var firstUsedDate: Date?
     
     var dailyLimit: Int {
         return isPremiumUser ? 10 : 2
     }
     
     var remainingGenerations: Int {
-        let remaining = dailyLimit - generationCount
-        return max(0, remaining)
+        if isPremiumUser {
+            let remaining = 10 - generationCount
+            return max(0, remaining)
+        } else {
+            let remaining = 2 - lifetimeUsageCount
+            return max(0, remaining)
+        }
     }
     
     init(isPremiumUser: Bool) {
@@ -28,13 +35,26 @@ final class UsageTracker {
         self.date = calendar.startOfDay(for: Date())
         self.generationCount = 0
         self.isPremiumUser = isPremiumUser
+        self.lifetimeUsageCount = 0
+        self.firstUsedDate = nil
     }
     
     func canGenerate() -> Bool {
-        return generationCount < dailyLimit
+        if isPremiumUser {
+            return generationCount < 10
+        } else {
+            return lifetimeUsageCount < 2
+        }
     }
     
     func incrementCount() {
         generationCount += 1
+        
+        if !isPremiumUser {
+            lifetimeUsageCount += 1
+            if firstUsedDate == nil {
+                firstUsedDate = Date()
+            }
+        }
     }
 }

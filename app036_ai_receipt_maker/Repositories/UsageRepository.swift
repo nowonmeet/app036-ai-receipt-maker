@@ -16,35 +16,40 @@ final class UsageRepository: UsageRepositoryProtocol {
     }
     
     func getTodayUsage() throws -> UsageTracker? {
-        let today = Calendar.current.startOfDay(for: Date())
+        let currentPremiumStatus = UniversalPaywallManager.shared.isPremiumActive
         
         do {
-            let descriptor = FetchDescriptor<UsageTracker>(
-                predicate: #Predicate { $0.date == today }
-            )
-            let results = try modelContext.fetch(descriptor)
-            
-            // 取得時に常に最新のプレミアム状態に更新
-            if let usage = results.first {
-                let currentPremiumStatus = UniversalPaywallManager.shared.isPremiumActive
+            if currentPremiumStatus {
+                // Premium users: use daily tracking
+                let today = Calendar.current.startOfDay(for: Date())
+                let descriptor = FetchDescriptor<UsageTracker>(
+                    predicate: #Predicate { $0.date == today && $0.isPremiumUser == true }
+                )
+                let results = try modelContext.fetch(descriptor)
                 
-                print("📊 [UsageRepository] getTodayUsage:")
-                print("  - Stored isPremiumUser: \(usage.isPremiumUser)")
-                print("  - Current premium status: \(currentPremiumStatus)")
-                print("  - Daily limit before: \(usage.dailyLimit)")
+                if let usage = results.first {
+                    print("📊 [UsageRepository] Premium user - Today's usage:")
+                    print("  - Daily count: \(usage.generationCount)/10")
+                    return usage
+                }
+            } else {
+                // Free users: use lifetime tracking (single record)
+                let descriptor = FetchDescriptor<UsageTracker>(
+                    predicate: #Predicate { $0.isPremiumUser == false }
+                )
+                let results = try modelContext.fetch(descriptor)
                 
-                if usage.isPremiumUser != currentPremiumStatus {
-                    print("  ⚠️ Premium status mismatch detected, updating...")
-                    usage.isPremiumUser = currentPremiumStatus
-                    try modelContext.save()
-                    print("  ✅ Updated isPremiumUser to: \(currentPremiumStatus)")
-                    print("  - Daily limit after: \(usage.dailyLimit)")
+                if let usage = results.first {
+                    print("📊 [UsageRepository] Free user - Lifetime usage:")
+                    print("  - Lifetime count: \(usage.lifetimeUsageCount)/2")
+                    print("  - First used: \(usage.firstUsedDate?.description ?? "N/A")")
+                    return usage
                 }
             }
             
-            return results.first
+            return nil
         } catch {
-            throw AppError.storageError("Failed to fetch today's usage: \(error.localizedDescription)")
+            throw AppError.storageError("Failed to fetch usage: \(error.localizedDescription)")
         }
     }
     
@@ -52,13 +57,21 @@ final class UsageRepository: UsageRepositoryProtocol {
         do {
             if let existingUsage = try getTodayUsage() {
                 existingUsage.incrementCount()
-                existingUsage.isPremiumUser = isPremium // Update premium status
-                print("📊 [UsageRepository] Updated existing usage: count=\(existingUsage.generationCount), isPremium=\(isPremium)")
+                if isPremium {
+                    print("📊 [UsageRepository] Premium user - Updated daily count: \(existingUsage.generationCount)/10")
+                } else {
+                    print("📊 [UsageRepository] Free user - Updated lifetime count: \(existingUsage.lifetimeUsageCount)/2")
+                }
             } else {
                 let newUsage = UsageTracker(isPremiumUser: isPremium)
                 newUsage.incrementCount()
                 modelContext.insert(newUsage)
-                print("📊 [UsageRepository] Created new usage: count=1, isPremium=\(isPremium)")
+                
+                if isPremium {
+                    print("📊 [UsageRepository] Created new premium usage tracker: count=1/10")
+                } else {
+                    print("📊 [UsageRepository] Created new free usage tracker: lifetime=1/2")
+                }
             }
             
             try modelContext.save()
@@ -72,17 +85,33 @@ final class UsageRepository: UsageRepositoryProtocol {
     }
     
     func resetDailyUsage() throws {
-        do {
-            if let todayUsage = try getTodayUsage() {
-                modelContext.delete(todayUsage)
+        // Only reset for premium users (daily tracking)
+        // Free users keep their lifetime count
+        let isPremium = UniversalPaywallManager.shared.isPremiumActive
+        
+        if isPremium {
+            do {
+                let today = Calendar.current.startOfDay(for: Date())
+                let descriptor = FetchDescriptor<UsageTracker>(
+                    predicate: #Predicate { $0.date == today && $0.isPremiumUser == true }
+                )
+                let results = try modelContext.fetch(descriptor)
+                
+                for usage in results {
+                    modelContext.delete(usage)
+                }
+                
                 try modelContext.save()
+                print("📊 [UsageRepository] Reset daily usage for premium user")
+            } catch {
+                if error is AppError {
+                    throw error
+                } else {
+                    throw AppError.storageError("Failed to reset daily usage: \(error.localizedDescription)")
+                }
             }
-        } catch {
-            if error is AppError {
-                throw error
-            } else {
-                throw AppError.storageError("Failed to reset daily usage: \(error.localizedDescription)")
-            }
+        } else {
+            print("📊 [UsageRepository] Free user - lifetime usage not reset")
         }
     }
 }

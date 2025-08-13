@@ -114,17 +114,19 @@ final class MainViewModel: ObservableObject {
     func checkUsageLimit() async -> Bool {
         do {
             guard let usage = try usageRepository.getTodayUsage() else {
-                print("📊 [MainViewModel] No usage today, can generate")
-                return true // No usage today, can generate
+                print("📊 [MainViewModel] No usage record found, can generate")
+                return true // No usage record, can generate
             }
             
             let canGenerate = usage.canGenerate()
             let isPremium = subscriptionService.isPremiumUser
             
             print("📊 [MainViewModel] Usage limit check:")
-            print("  - Current count: \(usage.generationCount)")
-            print("  - Daily limit: \(usage.dailyLimit)")
-            print("  - Is Premium: \(isPremium)")
+            if isPremium {
+                print("  - Premium user: \(usage.generationCount)/10 daily")
+            } else {
+                print("  - Free user: \(usage.lifetimeUsageCount)/2 lifetime")
+            }
             print("  - Can generate: \(canGenerate)")
             
             return canGenerate

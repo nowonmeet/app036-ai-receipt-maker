@@ -10,6 +10,7 @@ import Foundation
 import SwiftData
 @testable import app036_ai_receipt_maker
 
+@MainActor
 struct UsageRepositoryTests {
     
     private func createInMemoryModelContainer() -> ModelContainer {
@@ -34,7 +35,7 @@ struct UsageRepositoryTests {
         
         let todayUsage = try repository.getTodayUsage()
         #expect(todayUsage != nil)
-        #expect(todayUsage?.generationCount == 1)
+        #expect(todayUsage?.lifetimeUsageCount == 1)
         #expect(todayUsage?.isPremiumUser == false)
     }
     
@@ -46,7 +47,8 @@ struct UsageRepositoryTests {
         try repository.incrementUsage(isPremium: false)
         
         let todayUsage = try repository.getTodayUsage()
-        #expect(todayUsage?.generationCount == 2)
+        #expect(todayUsage?.lifetimeUsageCount == 2)
+        #expect(todayUsage?.firstUsedDate != nil)
     }
     
     @Test func testIncrementUsageForPremiumUser() throws {
@@ -64,69 +66,66 @@ struct UsageRepositoryTests {
         let container = createInMemoryModelContainer()
         let repository = UsageRepository(modelContext: container.mainContext)
         
-        // Create usage record
+        // Free user - usage should not be reset
         try repository.incrementUsage(isPremium: false)
         try repository.incrementUsage(isPremium: false)
         
-        var todayUsage = try repository.getTodayUsage()
-        #expect(todayUsage?.generationCount == 2)
+        var freeUsage = try repository.getTodayUsage()
+        #expect(freeUsage?.lifetimeUsageCount == 2)
         
-        // Reset usage
+        // Reset usage (should not affect free user)
         try repository.resetDailyUsage()
         
-        todayUsage = try repository.getTodayUsage()
-        #expect(todayUsage == nil)
+        freeUsage = try repository.getTodayUsage()
+        #expect(freeUsage?.lifetimeUsageCount == 2) // Still 2 for free user
     }
     
-    @Test func testGetTodayUsageIgnoresOldRecords() throws {
+    @Test func testFreeUserLifetimeTracking() throws {
         let container = createInMemoryModelContainer()
         let repository = UsageRepository(modelContext: container.mainContext)
         
-        // Create old usage tracker
-        let oldTracker = UsageTracker(isPremiumUser: false)
-        oldTracker.date = Calendar.current.startOfDay(for: Date().addingTimeInterval(-86400)) // Yesterday
-        oldTracker.generationCount = 5
+        // Create free user usage
+        try repository.incrementUsage(isPremium: false)
         
-        container.mainContext.insert(oldTracker)
-        try container.mainContext.save()
+        // Should retrieve same record regardless of date
+        let usage1 = try repository.getTodayUsage()
+        #expect(usage1?.lifetimeUsageCount == 1)
         
-        // Should not find today's usage
-        let todayUsage = try repository.getTodayUsage()
-        #expect(todayUsage == nil)
+        // Increment again (should update same record)
+        try repository.incrementUsage(isPremium: false)
         
-        // Create today's usage
-        try repository.incrementUsage(isPremium: true)
-        
-        let newTodayUsage = try repository.getTodayUsage()
-        #expect(newTodayUsage?.generationCount == 1)
-        #expect(newTodayUsage?.isPremiumUser == true)
+        let usage2 = try repository.getTodayUsage()
+        #expect(usage2?.lifetimeUsageCount == 2)
+        #expect(usage2?.canGenerate() == false) // Reached lifetime limit
     }
     
     @Test func testCanGenerateBasedOnUsage() throws {
         let container = createInMemoryModelContainer()
         let repository = UsageRepository(modelContext: container.mainContext)
         
-        // Free user - should be able to generate 2 times
+        // Free user - should be able to generate 2 times (lifetime)
         try repository.incrementUsage(isPremium: false)
-        var todayUsage = try repository.getTodayUsage()
-        #expect(todayUsage?.canGenerate() == true)
+        var freeUsage = try repository.getTodayUsage()
+        #expect(freeUsage?.canGenerate() == true)
         
         try repository.incrementUsage(isPremium: false)
-        todayUsage = try repository.getTodayUsage()
-        #expect(todayUsage?.canGenerate() == false) // Reached limit
+        freeUsage = try repository.getTodayUsage()
+        #expect(freeUsage?.canGenerate() == false) // Reached lifetime limit
+    }
+    
+    @Test func testPremiumUserDailyLimit() throws {
+        let container = createInMemoryModelContainer()
+        let repository = UsageRepository(modelContext: container.mainContext)
         
-        // Reset and test premium user
-        try repository.resetDailyUsage()
-        
-        // Premium user - should be able to generate 10 times
+        // Premium user - should be able to generate 10 times per day
         for i in 1...9 {
             try repository.incrementUsage(isPremium: true)
-            todayUsage = try repository.getTodayUsage()
-            #expect(todayUsage?.canGenerate() == true)
+            let usage = try repository.getTodayUsage()
+            #expect(usage?.canGenerate() == true)
         }
         
         try repository.incrementUsage(isPremium: true)
-        todayUsage = try repository.getTodayUsage()
-        #expect(todayUsage?.canGenerate() == false) // Reached premium limit
+        let finalUsage = try repository.getTodayUsage()
+        #expect(finalUsage?.canGenerate() == false) // Reached daily limit
     }
 }

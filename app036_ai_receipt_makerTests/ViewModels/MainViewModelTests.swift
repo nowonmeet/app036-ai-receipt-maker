@@ -42,7 +42,6 @@ struct MainViewModelTests {
         #expect(viewModel.receipts.isEmpty)
         #expect(viewModel.isGenerating == false)
         #expect(viewModel.errorMessage == nil)
-        #expect(viewModel.showPaywall == false)
     }
     
     @Test func testLoadReceiptsSuccess() async throws {
@@ -82,7 +81,7 @@ struct MainViewModelTests {
         let receiptData = ReceiptData(storeName: "Test Store", currency: "USD")
         await viewModel.generateReceipt(receiptData: receiptData)
         
-        #expect(viewModel.showPaywall == true)
+        // Paywall is shown through UniversalPaywallManager, not in ViewModel
         #expect(viewModel.isGenerating == false)
     }
     

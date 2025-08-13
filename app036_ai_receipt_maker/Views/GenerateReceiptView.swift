@@ -22,6 +22,10 @@ struct GenerateReceiptView: View {
                     .fontWeight(.bold)
                     .padding()
                 
+                // Usage status display
+                UsageStatusView(isPremium: UniversalPaywallManager.shared.isPremiumActive)
+                    .padding(.horizontal)
+                
                 if formViewModel.useRandomData {
                     VStack(spacing: 16) {
                         Text("Generate Random Receipt")
