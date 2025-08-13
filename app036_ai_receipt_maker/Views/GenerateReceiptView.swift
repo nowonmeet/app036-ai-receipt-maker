@@ -18,11 +18,6 @@ struct GenerateReceiptView: View {
     var body: some View {
         NavigationView {
             VStack(spacing: 20) {
-                Text("AI Receipt Maker")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                    .padding()
-                
                 // Usage status display
                 UsageStatusView(isPremium: isPremium)
                     .padding(.horizontal)
