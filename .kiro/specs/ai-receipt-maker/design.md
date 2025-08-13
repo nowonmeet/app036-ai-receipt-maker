@@ -59,6 +59,8 @@ class UsageTracker {
     var date: Date
     var generationCount: Int
     var isPremiumUser: Bool
+    var lifetimeUsageCount: Int  // 無料ユーザーの生涯使用回数
+    var firstUsedDate: Date?     // 初回使用日
 }
 ```
 
@@ -201,13 +203,17 @@ MainTabView
 - **isGenerated**: Bool - 生成完了フラグ
 
 #### UsageTracker エンティティ
-- **date**: Date - 使用日（日付のみ）
-- **generationCount**: Int - その日の生成回数
+- **date**: Date - 使用日（プレミアムユーザー用）
+- **generationCount**: Int - その日の生成回数（プレミアムユーザー用）
 - **isPremiumUser**: Bool - 記録時点でのプレミアムステータス
+- **lifetimeUsageCount**: Int - 生涯の生成回数（無料ユーザー用）
+- **firstUsedDate**: Date? - 初回使用日（無料ユーザー用）
 
 ### データ関係
 - ReceiptData ↔ ReceiptItem: 一対多の関係
-- UsageTracker: 日付ごとの独立したレコード
+- UsageTracker: 
+  - プレミアムユーザー: 日付ごとの独立したレコード
+  - 無料ユーザー: 単一の永続的なレコード
 
 ## エラーハンドリング
 
@@ -234,8 +240,11 @@ enum AppError: LocalizedError {
         case .validationError(let message):
             return "Validation Error: \(message)"
         case .usageLimitExceeded(let count, let isPremium):
-            let limit = isPremium ? 10 : 2
-            return "Daily limit reached (\(count)/\(limit))"
+            if isPremium {
+                return "Daily limit reached (\(count)/10)"
+            } else {
+                return "Trial limit reached (\(count)/2 lifetime)"
+            }
         }
     }
 }
