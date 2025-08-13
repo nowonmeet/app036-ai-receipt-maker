@@ -92,6 +92,7 @@ struct ReceiptFormView: View {
                                     .foregroundColor(.secondary)
                                 TextField("0.00", value: $viewModel.items[index].price, format: .number)
                                     .textFieldStyle(.roundedBorder)
+                                    .keyboardType(.decimalPad)
                                     .frame(width: 80)
                             }
                             
