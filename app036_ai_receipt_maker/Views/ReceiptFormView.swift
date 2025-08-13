@@ -182,6 +182,13 @@ struct ReceiptFormView: View {
         }
         .background(Color.gray.opacity(0.1))
         .cornerRadius(12)
+        .onTapGesture {
+            hideKeyboard()
+        }
+    }
+    
+    private func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 }
 
