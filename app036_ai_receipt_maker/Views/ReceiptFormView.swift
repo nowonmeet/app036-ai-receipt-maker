@@ -12,7 +12,8 @@ struct ReceiptFormView: View {
     @EnvironmentObject private var mainViewModel: MainViewModel
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        ScrollView(.vertical, showsIndicators: false) {
+            VStack(alignment: .leading, spacing: 20) {
             Text("Custom Receipt")
                 .font(.headline)
             
@@ -23,9 +24,14 @@ struct ReceiptFormView: View {
             
             // Store Information Section
             VStack(alignment: .leading, spacing: 12) {
-                Text("Store Information")
-                    .font(.subheadline)
-                    .fontWeight(.semibold)
+                HStack {
+                    Image(systemName: "storefront")
+                        .foregroundColor(.blue)
+                    Text("Store Information")
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
+                }
+                .padding(.bottom, 4)
                 
                 TextField("Store Name *", text: $viewModel.storeName)
                     .textFieldStyle(.roundedBorder)
@@ -51,9 +57,14 @@ struct ReceiptFormView: View {
             }
             
             // Items Section
-            Text("Items (Optional)")
-                .font(.subheadline)
-                .fontWeight(.semibold)
+            HStack {
+                Image(systemName: "list.bullet.clipboard")
+                    .foregroundColor(.green)
+                Text("Items (Optional)")
+                    .font(.subheadline)
+                    .fontWeight(.semibold)
+            }
+            .padding(.bottom, 4)
             
             if viewModel.items.isEmpty {
                 Text("No items added. AI will generate appropriate items for the store.")
@@ -124,8 +135,10 @@ struct ReceiptFormView: View {
             .buttonStyle(.borderedProminent)
             .controlSize(.large)
             .disabled(!viewModel.isValid)
+            }
+            .padding()
+            .padding(.bottom, 20) // 下部に余白を追加してスクロール時の余裕を確保
         }
-        .padding()
         .background(Color.gray.opacity(0.1))
         .cornerRadius(12)
     }
