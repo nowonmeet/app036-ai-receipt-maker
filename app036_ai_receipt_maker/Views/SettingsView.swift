@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SettingsView: View {
     @ObservedObject private var paywallManager = UniversalPaywallManager.shared
+    @State private var showingFeedback = false
     
     var body: some View {
         NavigationView {
@@ -59,9 +60,20 @@ struct SettingsView: View {
                 .foregroundColor(.green)
                 
                 Spacer()
+                
+                Button("フィードバックを送信") {
+                    showingFeedback = true
+                }
+                .buttonStyle(.bordered)
+                .controlSize(.large)
+                
+                Spacer()
             }
             .padding()
             .navigationTitle("Settings")
+        }
+        .sheet(isPresented: $showingFeedback) {
+            FeedbackView(feedbackService: FeedbackService(gasEndpointURL: APIConfiguration.feedbackGASEndpointURL))
         }
     }
 }

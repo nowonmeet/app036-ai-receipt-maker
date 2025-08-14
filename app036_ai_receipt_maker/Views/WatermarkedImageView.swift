@@ -10,10 +10,13 @@ import SwiftUI
 struct WatermarkedImageView: View {
     let imageURL: URL?
     let showWatermark: Bool
+    let receiptId: String?
+    @State private var showingFeedback = false
     
-    init(imageURL: URL?, showWatermark: Bool = true) {
+    init(imageURL: URL?, showWatermark: Bool = true, receiptId: String? = nil) {
         self.imageURL = imageURL
         self.showWatermark = showWatermark
+        self.receiptId = receiptId
     }
     
     var body: some View {
@@ -34,6 +37,27 @@ struct WatermarkedImageView: View {
             if showWatermark {
                 WatermarkOverlayView()
             }
+            
+            VStack {
+                HStack {
+                    Spacer()
+                    Button(action: {
+                        showingFeedback = true
+                    }) {
+                        Image(systemName: "exclamationmark.bubble")
+                            .foregroundColor(.white)
+                            .padding(8)
+                            .background(Color.black.opacity(0.5))
+                            .clipShape(Circle())
+                    }
+                    .padding(.top, 8)
+                    .padding(.trailing, 8)
+                }
+                Spacer()
+            }
+        }
+        .sheet(isPresented: $showingFeedback) {
+            FeedbackView(feedbackService: FeedbackService(gasEndpointURL: APIConfiguration.feedbackGASEndpointURL), receiptId: receiptId)
         }
     }
 }

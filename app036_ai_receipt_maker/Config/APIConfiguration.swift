@@ -29,6 +29,14 @@ enum APIConfiguration {
         return "https://api.openai.com/v1/"
     }
     
+    static var feedbackGASEndpointURL: String {
+        if let gasURL = ProcessInfo.processInfo.environment["FEEDBACK_GAS_ENDPOINT_URL"],
+           !gasURL.isEmpty {
+            return gasURL
+        }
+        return "https://script.google.com/macros/s/AKfycby7Eivl6JdFHzw8tzs68zBUXNnfQ7hEGbVqF_-c6RkzganfBKKxbmcfXQiqV94JWWet/exec"
+    }
+    
     static func validateConfiguration() {
         #if DEBUG
         print("✅ API Configuration validated")
