@@ -14,6 +14,8 @@ struct GenerateReceiptView: View {
     @StateObject private var formViewModel = ReceiptFormViewModel()
     @State private var showingError = false
     @State private var isPremium = UniversalPaywallManager.shared.isPremiumActive
+    @State private var showingReceiptDetail = false
+    @State private var currentReceiptForDetail: ReceiptData?
     
     var body: some View {
         NavigationView {
@@ -34,7 +36,7 @@ struct GenerateReceiptView: View {
                         
                         Button("Generate Random Receipt") {
                             Task {
-                                await mainViewModel.generateRandomReceipt()
+                                await generateRandomReceiptWithModal()
                             }
                         }
                         .buttonStyle(.borderedProminent)
@@ -44,20 +46,20 @@ struct GenerateReceiptView: View {
                     .background(Color.gray.opacity(0.1))
                     .cornerRadius(12)
                 } else {
-                    ReceiptFormView(viewModel: formViewModel)
+                    ReceiptFormView(
+                        viewModel: formViewModel,
+                        onGenerate: { receiptData in
+                            Task {
+                                await generateReceiptWithModal(receiptData: receiptData)
+                            }
+                        }
+                    )
                 }
                 
                 Toggle("Use Random Data", isOn: $formViewModel.useRandomData)
                     .padding(.horizontal)
                 
                 Spacer()
-                
-                if mainViewModel.isGenerating {
-                    ProgressView("Generating...")
-                        .progressViewStyle(CircularProgressViewStyle())
-                        .scaleEffect(1.5)
-                        .padding()
-                }
             }
             .padding()
             .navigationTitle("Generate")
@@ -76,7 +78,49 @@ struct GenerateReceiptView: View {
             .onAppear {
                 isPremium = UniversalPaywallManager.shared.isPremiumActive
             }
+            .sheet(isPresented: $showingReceiptDetail) {
+                if let receipt = currentReceiptForDetail {
+                    ReceiptDetailView(
+                        receipt: receipt,
+                        isGenerating: mainViewModel.isGenerating
+                    )
+                }
+            }
         }
+    }
+    
+    private func generateRandomReceiptWithModal() async {
+        let randomReceiptData = createRandomReceiptData()
+        await generateReceiptWithModal(receiptData: randomReceiptData)
+    }
+    
+    private func generateReceiptWithModal(receiptData: ReceiptData) async {
+        // モーダルを即座に表示
+        currentReceiptForDetail = receiptData
+        showingReceiptDetail = true
+        
+        // レシート生成を開始
+        await mainViewModel.generateReceipt(receiptData: receiptData)
+    }
+    
+    private func createRandomReceiptData() -> ReceiptData {
+        let storeNames = ["Coffee Corner", "Quick Mart", "Fresh Grocers", "Tech Store", "Fashion Outlet"]
+        let items = [
+            ("Coffee", 4.99), ("Sandwich", 8.50), ("Water", 2.00), ("Chips", 3.25),
+            ("Magazine", 5.99), ("Gum", 1.50), ("Banana", 1.25), ("Milk", 3.89)
+        ]
+        
+        let randomStore = storeNames.randomElement()!
+        let numberOfItems = Int.random(in: 1...4)
+        let selectedItems = items.shuffled().prefix(numberOfItems)
+        
+        let receiptData = ReceiptData(storeName: randomStore, currency: "USD")
+        receiptData.items = selectedItems.map { item in
+            ReceiptItem(name: item.0, price: Decimal(item.1), quantity: 1)
+        }
+        receiptData.calculateTotal()
+        
+        return receiptData
     }
 }
 

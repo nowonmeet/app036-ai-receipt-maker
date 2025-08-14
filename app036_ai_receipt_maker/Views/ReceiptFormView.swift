@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ReceiptFormView: View {
     @ObservedObject var viewModel: ReceiptFormViewModel
-    @EnvironmentObject private var mainViewModel: MainViewModel
+    let onGenerate: (ReceiptData) -> Void
     
     var body: some View {
         ScrollView(.vertical, showsIndicators: false) {
@@ -168,10 +168,7 @@ struct ReceiptFormView: View {
             
             Button("Generate Receipt") {
                 let receiptData = viewModel.createReceiptData()
-                
-                Task {
-                    await mainViewModel.generateReceipt(receiptData: receiptData)
-                }
+                onGenerate(receiptData)
             }
             .buttonStyle(.borderedProminent)
             .controlSize(.large)

@@ -11,6 +11,7 @@ import Photos
 
 struct ReceiptDetailView: View {
     let receipt: ReceiptData
+    let isGenerating: Bool
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var mainViewModel: MainViewModel
     @State private var showingSaveAlert = false
@@ -20,8 +21,9 @@ struct ReceiptDetailView: View {
     
     private let photoSaveService: PhotoSaveServiceProtocol
     
-    init(receipt: ReceiptData, photoSaveService: PhotoSaveServiceProtocol = PhotoSaveService()) {
+    init(receipt: ReceiptData, isGenerating: Bool = false, photoSaveService: PhotoSaveServiceProtocol = PhotoSaveService()) {
         self.receipt = receipt
+        self.isGenerating = isGenerating
         self.photoSaveService = photoSaveService
     }
     
@@ -29,10 +31,52 @@ struct ReceiptDetailView: View {
         NavigationView {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
-                    if receipt.isGenerated && !receipt.imageFileName.isEmpty {
+                    if isGenerating {
+                        // 生成中の状態
+                        VStack(spacing: 16) {
+                            HStack(spacing: 8) {
+                                Image(systemName: "wand.and.stars")
+                                    .foregroundColor(.blue)
+                                Text("Generating Your Receipt...")
+                                    .font(.headline)
+                                    .foregroundColor(.secondary)
+                            }
+                            
+                            WatermarkedImageView(
+                                imageURL: nil,
+                                showWatermark: true,
+                                receiptId: receipt.id.uuidString
+                            )
+                            .frame(height: 400)
+                            .cornerRadius(12)
+                            .shadow(radius: 4)
+                            .overlay(
+                                ZStack {
+                                    Color.black.opacity(0.4)
+                                        .cornerRadius(12)
+                                    
+                                    VStack(spacing: 12) {
+                                        ProgressView()
+                                            .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                            .scaleEffect(2.0)
+                                        
+                                        Text("Processing...")
+                                            .font(.headline)
+                                            .foregroundColor(.white)
+                                    }
+                                }
+                            )
+                            
+                            Text("This usually takes 5-10 seconds")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                                .frame(maxWidth: .infinity)
+                        }
+                    } else if receipt.isGenerated && !receipt.imageFileName.isEmpty {
                         WatermarkedImageView(
                             imageURL: imageURL,
-                            showWatermark: !isPremium
+                            showWatermark: !isPremium,
+                            receiptId: receipt.id.uuidString
                         )
                         .cornerRadius(12)
                         .shadow(radius: 4)
@@ -213,5 +257,5 @@ struct DetailRow: View {
         return r
     }()
     
-    ReceiptDetailView(receipt: receipt)
+    ReceiptDetailView(receipt: receipt, isGenerating: false)
 }

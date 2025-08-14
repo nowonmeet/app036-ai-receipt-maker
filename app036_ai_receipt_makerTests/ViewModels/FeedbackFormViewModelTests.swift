@@ -1,4 +1,5 @@
 import Testing
+import Foundation
 @testable import app036_ai_receipt_maker
 
 @MainActor
