@@ -12,6 +12,7 @@ struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @StateObject private var mainViewModel: MainViewModel
     @StateObject private var onboardingManager = OnboardingManager()
+    @StateObject private var paywallManager = UniversalPaywallManager.shared
     @State private var showOnboarding = true
     
     init() {
@@ -55,6 +56,23 @@ struct ContentView: View {
             if !onboardingManager.shouldShowOnboarding {
                 withAnimation(.easeInOut(duration: 0.5)) {
                     showOnboarding = false
+                }
+            }
+        }
+        .onChange(of: onboardingManager.shouldShowPaywall) { _, shouldShow in
+            #if DEBUG
+            print("🎯 [ContentView] shouldShowPaywall changed to: \(shouldShow)")
+            #endif
+            if shouldShow {
+                #if DEBUG
+                print("🚀 [ContentView] Starting paywall display with 0.8s delay")
+                #endif
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                    #if DEBUG
+                    print("🎯 [ContentView] Showing paywall now")
+                    #endif
+                    paywallManager.showPaywall(triggerSource: "onboarding_completed")
+                    onboardingManager.markPaywallShown()
                 }
             }
         }

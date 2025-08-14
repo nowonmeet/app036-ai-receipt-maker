@@ -91,4 +91,45 @@ struct OnboardingManagerTests {
         #expect(manager.debugOnboardingCompleted == false)
         #expect(manager.shouldShowOnboarding == true)
     }
+    
+    @Test("OnboardingManager shouldShowPaywall property")
+    func testShouldShowPaywall() {
+        let userDefaults = UserDefaults(suiteName: "test_paywall")!
+        let manager = OnboardingManager(userDefaults: userDefaults)
+        
+        // 初期状態：オンボーディング未完了なのでペイウォールは表示しない
+        #expect(manager.shouldShowPaywall == false)
+        
+        // オンボーディング完了後：ペイウォールを表示する
+        manager.completeOnboarding()
+        
+        // デバッグモードかどうかで動作が異なる
+        if APIConfiguration.isDebugOnboardingEnabled {
+            // デバッグモード：debugOnboardingCompleted が true になるのでペイウォール表示
+            #expect(manager.shouldShowPaywall == true)
+        } else {
+            // プロダクションモード：hasCompletedOnboarding が true になるのでペイウォール表示
+            #expect(manager.shouldShowPaywall == true)
+        }
+        
+        // ペイウォール表示済みフラグをセット：表示しない
+        manager.markPaywallShown()
+        #expect(manager.shouldShowPaywall == false)
+        
+        // リセット：初期状態に戻る
+        manager.resetOnboarding()
+        #expect(manager.shouldShowPaywall == false)
+    }
+    
+    @Test("OnboardingManager markPaywallShown persistence")
+    func testMarkPaywallShownPersistence() {
+        let userDefaults = UserDefaults(suiteName: "test_paywall_persistence")!
+        
+        let manager1 = OnboardingManager(userDefaults: userDefaults)
+        manager1.completeOnboarding()
+        manager1.markPaywallShown()
+        
+        let manager2 = OnboardingManager(userDefaults: userDefaults)
+        #expect(manager2.shouldShowPaywall == false)
+    }
 }

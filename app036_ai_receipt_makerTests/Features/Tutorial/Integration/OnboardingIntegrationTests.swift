@@ -134,6 +134,7 @@ struct OnboardingIntegrationTests {
         
         // Initial state - should show onboarding
         #expect(manager.shouldShowOnboarding == true)
+        #expect(manager.shouldShowPaywall == false)
         
         // Complete onboarding flow
         while !viewModel.isLastPage {
@@ -143,6 +144,11 @@ struct OnboardingIntegrationTests {
         // Complete onboarding
         manager.completeOnboarding()
         #expect(manager.hasCompletedOnboarding == true)
+        #expect(manager.shouldShowPaywall == true)
+        
+        // Mark paywall as shown
+        manager.markPaywallShown()
+        #expect(manager.shouldShowPaywall == false)
         
         // Check final state based on build configuration
         if APIConfiguration.isDebugOnboardingEnabled {
@@ -153,5 +159,36 @@ struct OnboardingIntegrationTests {
             // Production: should not show onboarding after completion
             #expect(manager.shouldShowOnboarding == false)
         }
+    }
+    
+    @Test("Paywall display workflow integration")
+    func testPaywallDisplayWorkflowIntegration() {
+        let userDefaults = UserDefaults(suiteName: "paywall_workflow_test")!
+        let manager = OnboardingManager(userDefaults: userDefaults)
+        
+        // Initial state
+        #expect(manager.shouldShowOnboarding == true)
+        #expect(manager.shouldShowPaywall == false)
+        #expect(manager.hasCompletedOnboarding == false)
+        #expect(manager.hasShownPaywall == false)
+        
+        // Complete onboarding
+        manager.completeOnboarding()
+        #expect(manager.shouldShowOnboarding == false || APIConfiguration.isDebugOnboardingEnabled)
+        #expect(manager.shouldShowPaywall == true)
+        #expect(manager.hasCompletedOnboarding == true)
+        #expect(manager.hasShownPaywall == false)
+        
+        // Mark paywall as shown (simulating actual display)
+        manager.markPaywallShown()
+        #expect(manager.shouldShowPaywall == false)
+        #expect(manager.hasShownPaywall == true)
+        
+        // Reset and verify state
+        manager.resetOnboarding()
+        #expect(manager.shouldShowOnboarding == true)
+        #expect(manager.shouldShowPaywall == false)
+        #expect(manager.hasCompletedOnboarding == false)
+        #expect(manager.hasShownPaywall == false)
     }
 }
