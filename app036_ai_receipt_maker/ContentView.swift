@@ -11,6 +11,7 @@ import SwiftData
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @StateObject private var mainViewModel: MainViewModel
+    @StateObject private var onboardingManager = OnboardingManager()
     
     init() {
         let context = ModelContainer.shared.mainContext
@@ -24,8 +25,20 @@ struct ContentView: View {
     }
     
     var body: some View {
-        MainTabView()
-            .environmentObject(mainViewModel)
+        Group {
+            if onboardingManager.hasCompletedOnboarding {
+                MainTabView()
+                    .environmentObject(mainViewModel)
+            } else {
+                OnboardingContainerView(
+                    onboardingManager: onboardingManager,
+                    onComplete: {
+                        // Completion handled by OnboardingManager
+                    }
+                )
+            }
+        }
+        .animation(.easeInOut(duration: 0.5), value: onboardingManager.hasCompletedOnboarding)
     }
 }
 
