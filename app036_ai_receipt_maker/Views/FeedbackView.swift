@@ -21,18 +21,18 @@ struct FeedbackView: View {
                     successView
                 }
             }
-            .navigationTitle("フィードバック")
+            .navigationTitle("Feedback")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("キャンセル") {
+                    Button("Cancel") {
                         dismiss()
                     }
                 }
                 
                 if viewModel.submissionState == .idle || viewModel.submissionState == .error {
                     ToolbarItem(placement: .navigationBarTrailing) {
-                        Button("送信") {
+                        Button("Submit") {
                             Task {
                                 await viewModel.submitFeedback()
                             }
@@ -46,8 +46,8 @@ struct FeedbackView: View {
     
     private var feedbackForm: some View {
         Form {
-            Section("問題の種類") {
-                Picker("問題の種類", selection: $viewModel.problemType) {
+            Section("Issue Type") {
+                Picker("Issue Type", selection: $viewModel.problemType) {
                     ForEach(FeedbackData.ProblemType.allCases, id: \.self) { type in
                         Text(type.localizedTitle).tag(type)
                     }
@@ -55,13 +55,13 @@ struct FeedbackView: View {
                 .pickerStyle(.menu)
             }
             
-            Section("詳細説明") {
+            Section("Description") {
                 TextEditor(text: $viewModel.description)
                     .frame(minHeight: 100)
                     .overlay(
                         Group {
                             if viewModel.description.isEmpty {
-                                Text("問題の詳細を入力してください...")
+                                Text("Please describe the issue in detail...")
                                     .foregroundColor(.secondary)
                                     .allowsHitTesting(false)
                             }
@@ -70,8 +70,8 @@ struct FeedbackView: View {
                     )
             }
             
-            Section("重要度") {
-                Picker("重要度", selection: $viewModel.severity) {
+            Section("Severity") {
+                Picker("Severity", selection: $viewModel.severity) {
                     ForEach(FeedbackData.Severity.allCases, id: \.self) { severity in
                         Text(severity.localizedTitle).tag(severity)
                     }
@@ -80,20 +80,20 @@ struct FeedbackView: View {
             }
             
             Section {
-                TextField("連絡先メールアドレス（任意）", text: $viewModel.email)
+                TextField("Contact email (optional)", text: $viewModel.email)
                     .keyboardType(.emailAddress)
                     .autocapitalization(.none)
                     .textContentType(.emailAddress)
                 
                 if !viewModel.isEmailValid {
-                    Text("有効なメールアドレスを入力してください")
+                    Text("Please enter a valid email address")
                         .foregroundColor(.red)
                         .font(.caption)
                 }
             } header: {
-                Text("連絡先（任意）")
+                Text("Contact Information")
             } footer: {
-                Text("返信が必要な場合のみ入力してください")
+                Text("Only required if you need a response")
             }
             
             if viewModel.submissionState == .error {
@@ -101,7 +101,7 @@ struct FeedbackView: View {
                     Text(viewModel.errorMessage)
                         .foregroundColor(.red)
                 } header: {
-                    Text("エラー")
+                    Text("Error")
                 }
             }
             
@@ -110,7 +110,7 @@ struct FeedbackView: View {
                     HStack {
                         ProgressView()
                             .scaleEffect(0.8)
-                        Text("送信中...")
+                        Text("Submitting...")
                             .foregroundColor(.secondary)
                     }
                 }
@@ -125,17 +125,17 @@ struct FeedbackView: View {
                 .foregroundColor(.green)
             
             VStack(spacing: 8) {
-                Text("フィードバックを送信しました")
+                Text("Feedback Submitted")
                     .font(.title2)
                     .fontWeight(.semibold)
                 
-                Text("貴重なご意見をありがとうございます。\n改善に向けて検討させていただきます。")
+                Text("Thank you for your valuable feedback.\nWe will review it for improvements.")
                     .font(.body)
                     .foregroundColor(.secondary)
                     .multilineTextAlignment(.center)
             }
             
-            Button("閉じる") {
+            Button("Close") {
                 dismiss()
             }
             .buttonStyle(.borderedProminent)

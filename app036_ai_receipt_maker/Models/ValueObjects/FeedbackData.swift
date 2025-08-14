@@ -19,10 +19,10 @@ struct FeedbackData {
 
 extension FeedbackData {
     enum ProblemType: String, CaseIterable {
-        case inappropriateImage = "不適切な画像"
-        case technicalIssue = "技術的問題"
-        case featureRequest = "機能要望"
-        case other = "その他"
+        case inappropriateImage = "Inappropriate Image"
+        case technicalIssue = "Technical Issue"
+        case featureRequest = "Feature Request"
+        case other = "Other"
         
         var localizedTitle: String {
             self.rawValue
@@ -36,9 +36,9 @@ extension FeedbackData {
         
         var localizedTitle: String {
             switch self {
-            case .low: return "低"
-            case .medium: return "中"
-            case .high: return "高"
+            case .low: return "Low"
+            case .medium: return "Medium"
+            case .high: return "High"
             }
         }
     }

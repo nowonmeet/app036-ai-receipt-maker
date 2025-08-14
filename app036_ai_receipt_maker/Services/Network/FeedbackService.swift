@@ -102,17 +102,17 @@ enum FeedbackError: LocalizedError, Equatable {
     var errorDescription: String? {
         switch self {
         case .endpointNotConfigured:
-            return "フィードバック送信先が設定されていません"
+            return "Feedback endpoint is not configured"
         case .invalidEndpoint:
-            return "無効なエンドポイントURLです"
+            return "Invalid endpoint URL"
         case .invalidResponse:
-            return "サーバーからの応答が無効です"
+            return "Invalid response from server"
         case .serverError(let statusCode):
-            return "サーバーエラーが発生しました（コード: \(statusCode)）"
+            return "Server error occurred (code: \(statusCode))"
         case .submissionFailed:
-            return "フィードバックの送信に失敗しました"
+            return "Failed to submit feedback"
         case .networkError(let underlyingError):
-            return "ネットワークエラー: \(underlyingError.localizedDescription)"
+            return "Network error: \(underlyingError.localizedDescription)"
         }
     }
 }

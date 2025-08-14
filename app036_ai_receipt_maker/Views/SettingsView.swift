@@ -61,7 +61,7 @@ struct SettingsView: View {
                 
                 Spacer()
                 
-                Button("フィードバックを送信") {
+                Button("Send Feedback") {
                     showingFeedback = true
                 }
                 .buttonStyle(.bordered)
