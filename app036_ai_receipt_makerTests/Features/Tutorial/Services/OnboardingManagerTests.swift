@@ -51,4 +51,44 @@ struct OnboardingManagerTests {
         let manager2 = OnboardingManager(userDefaults: userDefaults)
         #expect(manager2.hasCompletedOnboarding == true)
     }
+    
+    @Test("OnboardingManager shouldShowOnboarding behavior")
+    func testShouldShowOnboarding() {
+        let userDefaults = UserDefaults(suiteName: "test_debug")!
+        let manager = OnboardingManager(userDefaults: userDefaults)
+        
+        // Debug mode: should show onboarding until debugOnboardingCompleted is true
+        if APIConfiguration.isDebugOnboardingEnabled {
+            #expect(manager.shouldShowOnboarding == true)
+            #expect(manager.debugOnboardingCompleted == false)
+            
+            manager.completeOnboarding()
+            #expect(manager.shouldShowOnboarding == false)
+            #expect(manager.debugOnboardingCompleted == true)
+        } else {
+            // Production mode: show only if not completed
+            #expect(manager.shouldShowOnboarding == true)
+            
+            manager.completeOnboarding()
+            #expect(manager.shouldShowOnboarding == false)
+        }
+    }
+    
+    @Test("OnboardingManager resetOnboarding resets debug state")
+    func testResetOnboardingResetsDebugState() {
+        let userDefaults = UserDefaults(suiteName: "test_debug_reset")!
+        let manager = OnboardingManager(userDefaults: userDefaults)
+        
+        manager.completeOnboarding()
+        #expect(manager.hasCompletedOnboarding == true)
+        
+        if APIConfiguration.isDebugOnboardingEnabled {
+            #expect(manager.debugOnboardingCompleted == true)
+        }
+        
+        manager.resetOnboarding()
+        #expect(manager.hasCompletedOnboarding == false)
+        #expect(manager.debugOnboardingCompleted == false)
+        #expect(manager.shouldShowOnboarding == true)
+    }
 }

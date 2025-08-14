@@ -101,4 +101,57 @@ struct OnboardingIntegrationTests {
         viewModel.currentPageIndex = 4
         #expect(viewModel.progress == 1.0)
     }
+    
+    @Test("Debug mode integration with ContentView logic")
+    func testDebugModeIntegration() {
+        let userDefaults = UserDefaults(suiteName: "integration_debug_test")!
+        let manager = OnboardingManager(userDefaults: userDefaults)
+        
+        // Simulate the ContentView logic
+        let shouldShowOnboardingInitially = manager.shouldShowOnboarding
+        
+        if APIConfiguration.isDebugOnboardingEnabled {
+            // In debug mode, should initially show onboarding
+            #expect(shouldShowOnboardingInitially == true)
+            
+            // After completion, should not show in debug mode
+            manager.completeOnboarding()
+            #expect(manager.shouldShowOnboarding == false)
+        } else {
+            // In production mode, normal behavior
+            #expect(shouldShowOnboardingInitially == true)
+            
+            manager.completeOnboarding()
+            #expect(manager.shouldShowOnboarding == false)
+        }
+    }
+    
+    @Test("Complete debug workflow simulation")
+    func testCompleteDebugWorkflowSimulation() {
+        let userDefaults = UserDefaults(suiteName: "debug_workflow_test")!
+        let manager = OnboardingManager(userDefaults: userDefaults)
+        let viewModel = OnboardingViewModel()
+        
+        // Initial state - should show onboarding
+        #expect(manager.shouldShowOnboarding == true)
+        
+        // Complete onboarding flow
+        while !viewModel.isLastPage {
+            viewModel.nextPage()
+        }
+        
+        // Complete onboarding
+        manager.completeOnboarding()
+        #expect(manager.hasCompletedOnboarding == true)
+        
+        // Check final state based on build configuration
+        if APIConfiguration.isDebugOnboardingEnabled {
+            // Debug: should not show onboarding after debug completion
+            #expect(manager.shouldShowOnboarding == false)
+            #expect(manager.debugOnboardingCompleted == true)
+        } else {
+            // Production: should not show onboarding after completion
+            #expect(manager.shouldShowOnboarding == false)
+        }
+    }
 }

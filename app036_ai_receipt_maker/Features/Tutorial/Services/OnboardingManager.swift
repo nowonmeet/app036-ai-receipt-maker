@@ -19,6 +19,15 @@ final class OnboardingManager: ObservableObject {
         }
     }
     
+    @Published var debugOnboardingCompleted: Bool = false
+    
+    var shouldShowOnboarding: Bool {
+        if APIConfiguration.isDebugOnboardingEnabled {
+            return !debugOnboardingCompleted
+        }
+        return !hasCompletedOnboarding
+    }
+    
     init(userDefaults: UserDefaults = .standard) {
         self.userDefaults = userDefaults
         self.hasCompletedOnboarding = userDefaults.bool(forKey: Self.onboardingKey)
@@ -26,9 +35,13 @@ final class OnboardingManager: ObservableObject {
     
     func completeOnboarding() {
         hasCompletedOnboarding = true
+        if APIConfiguration.isDebugOnboardingEnabled {
+            debugOnboardingCompleted = true
+        }
     }
     
     func resetOnboarding() {
         hasCompletedOnboarding = false
+        debugOnboardingCompleted = false
     }
 }

@@ -8,6 +8,14 @@
 import Foundation
 
 enum APIConfiguration {
+    static var isDebugOnboardingEnabled: Bool {
+        #if DEBUG
+        return true
+        #else
+        return false
+        #endif
+    }
+    
     static var openAIAPIKey: String {
         guard let apiKey = ProcessInfo.processInfo.environment["OPENAI_API_KEY"],
               !apiKey.isEmpty,

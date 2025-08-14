@@ -12,6 +12,7 @@ struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @StateObject private var mainViewModel: MainViewModel
     @StateObject private var onboardingManager = OnboardingManager()
+    @State private var showOnboarding = true
     
     init() {
         let context = ModelContainer.shared.mainContext
@@ -26,19 +27,37 @@ struct ContentView: View {
     
     var body: some View {
         Group {
-            if onboardingManager.hasCompletedOnboarding {
-                MainTabView()
-                    .environmentObject(mainViewModel)
-            } else {
+            if showOnboarding {
                 OnboardingContainerView(
                     onboardingManager: onboardingManager,
                     onComplete: {
-                        // Completion handled by OnboardingManager
+                        withAnimation(.easeInOut(duration: 0.5)) {
+                            showOnboarding = false
+                        }
                     }
                 )
+            } else {
+                MainTabView()
+                    .environmentObject(mainViewModel)
             }
         }
-        .animation(.easeInOut(duration: 0.5), value: onboardingManager.hasCompletedOnboarding)
+        .onAppear {
+            showOnboarding = onboardingManager.shouldShowOnboarding
+        }
+        .onChange(of: onboardingManager.shouldShowOnboarding) { _, newValue in
+            if !newValue {
+                withAnimation(.easeInOut(duration: 0.5)) {
+                    showOnboarding = false
+                }
+            }
+        }
+        .onChange(of: onboardingManager.debugOnboardingCompleted) { _, _ in
+            if !onboardingManager.shouldShowOnboarding {
+                withAnimation(.easeInOut(duration: 0.5)) {
+                    showOnboarding = false
+                }
+            }
+        }
     }
 }
 
