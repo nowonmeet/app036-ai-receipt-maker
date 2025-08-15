@@ -18,78 +18,25 @@ struct SettingsView: View {
     
     var body: some View {
         NavigationView {
-            VStack(spacing: 20) {
-                Text("AI Receipt Maker")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("Subscription Status")
-                        .font(.headline)
+            ScrollView {
+                LazyVStack(spacing: 24) {
+                    subscriptionStatusCard
                     
-                    HStack {
-                        Text("Current Plan:")
-                        Spacer()
-                        Text(paywallManager.isPremiumActive ? "Premium" : "Free")
-                            .foregroundColor(paywallManager.isPremiumActive ? .green : .orange)
-                            .fontWeight(.semibold)
+                    if !paywallManager.isPremiumActive {
+                        upgradeCard
+                        premiumFeaturesCard
+                    } else {
+                        premiumActiveCard
                     }
                     
-                    HStack {
-                        Text(paywallManager.isPremiumActive ? "Daily Generations:" : "Lifetime Generations:")
-                        Spacer()
-                        Text(getUsageText())
-                            .fontWeight(.semibold)
-                    }
+                    feedbackCard
                 }
-                .padding()
-                .background(Color.gray.opacity(0.1))
-                .cornerRadius(12)
-                
-                if !paywallManager.isPremiumActive {
-                    Button("Upgrade to Premium") {
-                        paywallManager.showPaywall(triggerSource: "settings_upgrade_button")
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .controlSize(.large)
-                } else {
-                    HStack {
-                        Image(systemName: "checkmark.circle.fill")
-                            .foregroundColor(.green)
-                        Text("Premium Active")
-                            .fontWeight(.semibold)
-                    }
-                    .padding()
-                    .background(Color.green.opacity(0.1))
-                    .cornerRadius(10)
-                }
-                
-                Spacer()
-                
-                if !paywallManager.isPremiumActive {
-                    Text("Premium users get:")
-                        .font(.headline)
-                    
-                    VStack(alignment: .leading, spacing: 8) {
-                        Label("10 generations per day", systemImage: "checkmark.circle.fill")
-                        Label("No watermarks on saved images", systemImage: "checkmark.circle.fill")
-                        Label("Priority support", systemImage: "checkmark.circle.fill")
-                    }
-                    .foregroundColor(.green)
-                }
-                
-                Spacer()
-                
-                Button("Send Feedback") {
-                    showingFeedback = true
-                }
-                .buttonStyle(.bordered)
-                .controlSize(.large)
-                
-                Spacer()
+                .padding(.horizontal, 20)
+                .padding(.top, 20)
             }
-            .padding()
+            .background(Color(.systemGroupedBackground))
             .navigationTitle("Settings")
+            .navigationBarTitleDisplayMode(.large)
             .onAppear {
                 refreshUsageStatus()
             }
@@ -102,6 +49,212 @@ struct SettingsView: View {
         }
     }
     
+    private var subscriptionStatusCard: some View {
+        VStack(spacing: 16) {
+            HStack {
+                Image(systemName: paywallManager.isPremiumActive ? "crown.fill" : "person.circle")
+                    .font(.title2)
+                    .foregroundColor(paywallManager.isPremiumActive ? .yellow : .secondary)
+                
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Current Plan")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                    
+                    Text(paywallManager.isPremiumActive ? "Premium" : "Free")
+                        .font(.title3)
+                        .fontWeight(.semibold)
+                        .foregroundColor(paywallManager.isPremiumActive ? .primary : .orange)
+                }
+                
+                Spacer()
+            }
+            
+            Divider()
+            
+            HStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(paywallManager.isPremiumActive ? "Daily Generations" : "Lifetime Generations")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                    
+                    Text(getUsageText())
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .foregroundColor(.primary)
+                }
+                
+                Spacer()
+                
+                CircularProgressView(
+                    progress: getUsageProgress(),
+                    lineWidth: 6
+                )
+                .frame(width: 50, height: 50)
+            }
+        }
+        .padding(20)
+        .background(Color(.systemBackground))
+        .cornerRadius(16)
+        .shadow(color: .black.opacity(0.05), radius: 10, x: 0, y: 2)
+                
+    }
+    
+    private var upgradeCard: some View {
+        VStack(spacing: 16) {
+            HStack {
+                Image(systemName: "arrow.up.circle.fill")
+                    .font(.title2)
+                    .foregroundColor(.blue)
+                
+                Text("Upgrade to Premium")
+                    .font(.headline)
+                    .fontWeight(.semibold)
+                
+                Spacer()
+            }
+            
+            Button(action: {
+                withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
+                    paywallManager.showPaywall(triggerSource: "settings_upgrade_button")
+                }
+            }) {
+                HStack {
+                    Image(systemName: "crown.fill")
+                    Text("Get Premium")
+                        .fontWeight(.semibold)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 16)
+                .background(
+                    LinearGradient(
+                        colors: [.blue, .purple],
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                )
+                .foregroundColor(.white)
+                .cornerRadius(12)
+            }
+            .buttonStyle(.plain)
+        }
+        .padding(20)
+        .background(Color(.systemBackground))
+        .cornerRadius(16)
+        .shadow(color: .black.opacity(0.05), radius: 10, x: 0, y: 2)
+    }
+    
+    private var premiumFeaturesCard: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            HStack {
+                Image(systemName: "star.fill")
+                    .font(.title2)
+                    .foregroundColor(.yellow)
+                
+                Text("Premium Features")
+                    .font(.headline)
+                    .fontWeight(.semibold)
+                
+                Spacer()
+            }
+            
+            VStack(spacing: 12) {
+                FeatureRow(
+                    icon: "infinity.circle.fill",
+                    title: "10 generations per day",
+                    color: .green
+                )
+                
+                FeatureRow(
+                    icon: "photo.badge.checkmark.fill",
+                    title: "No watermarks",
+                    color: .blue
+                )
+                
+                FeatureRow(
+                    icon: "headphones.circle.fill",
+                    title: "Priority support",
+                    color: .purple
+                )
+            }
+        }
+        .padding(20)
+        .background(Color(.systemBackground))
+        .cornerRadius(16)
+        .shadow(color: .black.opacity(0.05), radius: 10, x: 0, y: 2)
+    }
+    
+    private var premiumActiveCard: some View {
+        VStack(spacing: 16) {
+            HStack {
+                Image(systemName: "checkmark.seal.fill")
+                    .font(.title2)
+                    .foregroundColor(.green)
+                
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Premium Active")
+                        .font(.headline)
+                        .fontWeight(.semibold)
+                    
+                    Text("Thank you for supporting the app!")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
+                
+                Spacer()
+            }
+        }
+        .padding(20)
+        .background(
+            LinearGradient(
+                colors: [.green.opacity(0.1), .blue.opacity(0.1)],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(Color.green.opacity(0.3), lineWidth: 1)
+        )
+        .cornerRadius(16)
+    }
+    
+    private var feedbackCard: some View {
+        VStack(spacing: 16) {
+            HStack {
+                Image(systemName: "envelope.fill")
+                    .font(.title2)
+                    .foregroundColor(.orange)
+                
+                Text("Send Feedback")
+                    .font(.headline)
+                    .fontWeight(.semibold)
+                
+                Spacer()
+            }
+            
+            Button(action: {
+                showingFeedback = true
+            }) {
+                HStack {
+                    Image(systemName: "paperplane.fill")
+                    Text("Contact Us")
+                        .fontWeight(.medium)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 14)
+                .background(Color.orange.opacity(0.1))
+                .foregroundColor(.orange)
+                .cornerRadius(10)
+            }
+            .buttonStyle(.plain)
+        }
+        .padding(20)
+        .background(Color(.systemBackground))
+        .cornerRadius(16)
+        .shadow(color: .black.opacity(0.05), radius: 10, x: 0, y: 2)
+    }
+    
     private func getUsageText() -> String {
         if let usage = currentUsage {
             if paywallManager.isPremiumActive {
@@ -111,6 +264,15 @@ struct SettingsView: View {
             }
         }
         return paywallManager.isPremiumActive ? "0 / 10" : "0 / 2"
+    }
+    
+    private func getUsageProgress() -> Double {
+        if let usage = currentUsage {
+            let maxCount = paywallManager.isPremiumActive ? 10.0 : 2.0
+            let currentCount = paywallManager.isPremiumActive ? Double(usage.generationCount) : Double(usage.lifetimeUsageCount)
+            return min(currentCount / maxCount, 1.0)
+        }
+        return 0.0
     }
     
     private func refreshUsageStatus() {
@@ -125,6 +287,52 @@ struct SettingsView: View {
             currentUsage = usageTrackers.first { tracker in
                 tracker.isPremiumUser == false
             }
+        }
+    }
+}
+
+struct FeatureRow: View {
+    let icon: String
+    let title: String
+    let color: Color
+    
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: icon)
+                .font(.title3)
+                .foregroundColor(color)
+                .frame(width: 24)
+            
+            Text(title)
+                .font(.body)
+                .foregroundColor(.primary)
+            
+            Spacer()
+        }
+    }
+}
+
+struct CircularProgressView: View {
+    let progress: Double
+    let lineWidth: CGFloat
+    
+    var body: some View {
+        ZStack {
+            Circle()
+                .stroke(Color.gray.opacity(0.2), lineWidth: lineWidth)
+            
+            Circle()
+                .trim(from: 0, to: progress)
+                .stroke(
+                    LinearGradient(
+                        colors: [.blue, .purple],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ),
+                    style: StrokeStyle(lineWidth: lineWidth, lineCap: .round)
+                )
+                .rotationEffect(.degrees(-90))
+                .animation(.easeInOut(duration: 0.8), value: progress)
         }
     }
 }
