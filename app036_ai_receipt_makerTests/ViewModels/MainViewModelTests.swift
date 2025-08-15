@@ -18,14 +18,16 @@ struct MainViewModelTests {
         subscriptionService: MockSubscriptionService,
         receiptRepository: MockReceiptRepository,
         usageRepository: MockUsageRepository,
-        imageStorageService: MockImageStorageService
+        imageStorageService: MockImageStorageService,
+        inAppReviewService: MockInAppReviewService
     ) {
         return (
             dalleService: MockDALLEService(),
             subscriptionService: MockSubscriptionService(),
             receiptRepository: MockReceiptRepository(),
             usageRepository: MockUsageRepository(),
-            imageStorageService: MockImageStorageService()
+            imageStorageService: MockImageStorageService(),
+            inAppReviewService: MockInAppReviewService()
         )
     }
     
@@ -36,7 +38,8 @@ struct MainViewModelTests {
             subscriptionService: services.subscriptionService,
             receiptRepository: services.receiptRepository,
             usageRepository: services.usageRepository,
-            imageStorageService: services.imageStorageService
+            imageStorageService: services.imageStorageService,
+            inAppReviewService: services.inAppReviewService
         )
         
         #expect(viewModel.receipts.isEmpty)
@@ -57,7 +60,8 @@ struct MainViewModelTests {
             subscriptionService: services.subscriptionService,
             receiptRepository: services.receiptRepository,
             usageRepository: services.usageRepository,
-            imageStorageService: services.imageStorageService
+            imageStorageService: services.imageStorageService,
+            inAppReviewService: services.inAppReviewService
         )
         
         await viewModel.loadReceipts()
@@ -75,7 +79,8 @@ struct MainViewModelTests {
             subscriptionService: services.subscriptionService,
             receiptRepository: services.receiptRepository,
             usageRepository: services.usageRepository,
-            imageStorageService: services.imageStorageService
+            imageStorageService: services.imageStorageService,
+            inAppReviewService: services.inAppReviewService
         )
         
         let receiptData = ReceiptData(storeName: "Test Store", currency: "USD")
@@ -95,7 +100,8 @@ struct MainViewModelTests {
             subscriptionService: services.subscriptionService,
             receiptRepository: services.receiptRepository,
             usageRepository: services.usageRepository,
-            imageStorageService: services.imageStorageService
+            imageStorageService: services.imageStorageService,
+            inAppReviewService: services.inAppReviewService
         )
         
         let receiptData = ReceiptData(storeName: "Test Store", currency: "USD")
@@ -115,7 +121,8 @@ struct MainViewModelTests {
             subscriptionService: services.subscriptionService,
             receiptRepository: services.receiptRepository,
             usageRepository: services.usageRepository,
-            imageStorageService: services.imageStorageService
+            imageStorageService: services.imageStorageService,
+            inAppReviewService: services.inAppReviewService
         )
         
         let receiptData = ReceiptData(storeName: "Test Store", currency: "USD")
@@ -135,7 +142,8 @@ struct MainViewModelTests {
             subscriptionService: services.subscriptionService,
             receiptRepository: services.receiptRepository,
             usageRepository: services.usageRepository,
-            imageStorageService: services.imageStorageService
+            imageStorageService: services.imageStorageService,
+            inAppReviewService: services.inAppReviewService
         )
         
         await viewModel.loadReceipts()
@@ -156,7 +164,8 @@ struct MainViewModelTests {
             subscriptionService: services.subscriptionService,
             receiptRepository: services.receiptRepository,
             usageRepository: services.usageRepository,
-            imageStorageService: services.imageStorageService
+            imageStorageService: services.imageStorageService,
+            inAppReviewService: services.inAppReviewService
         )
         
         await viewModel.generateRandomReceipt()
@@ -177,7 +186,8 @@ struct MainViewModelTests {
             subscriptionService: services.subscriptionService,
             receiptRepository: services.receiptRepository,
             usageRepository: services.usageRepository,
-            imageStorageService: services.imageStorageService
+            imageStorageService: services.imageStorageService,
+            inAppReviewService: services.inAppReviewService
         )
         
         let canGenerate = await viewModel.checkUsageLimit()
@@ -186,5 +196,97 @@ struct MainViewModelTests {
         mockUsage.generationCount = 2
         let canGenerateAfterLimit = await viewModel.checkUsageLimit()
         #expect(canGenerateAfterLimit == false) // 2/2 for free user
+    }
+    
+    @Test func testGenerateReceiptSuccess_incrementsGenerationCount() async throws {
+        let services = createMockServices()
+        services.usageRepository.shouldReturnUsage = UsageTracker(isPremiumUser: false)
+        services.usageRepository.canGenerate = true
+        services.dalleService.shouldSucceed = true
+        
+        let viewModel = MainViewModel(
+            dalleService: services.dalleService,
+            subscriptionService: services.subscriptionService,
+            receiptRepository: services.receiptRepository,
+            usageRepository: services.usageRepository,
+            imageStorageService: services.imageStorageService,
+            inAppReviewService: services.inAppReviewService
+        )
+        
+        let receiptData = ReceiptData(storeName: "Test Store", currency: "USD")
+        
+        await viewModel.generateReceipt(receiptData: receiptData)
+        
+        #expect(services.inAppReviewService.incrementGenerationCallCount == 1)
+    }
+    
+    @Test func testGenerateReceiptSuccess_requestsReviewIfAppropriate() async throws {
+        let services = createMockServices()
+        services.usageRepository.shouldReturnUsage = UsageTracker(isPremiumUser: false)
+        services.usageRepository.canGenerate = true
+        services.dalleService.shouldSucceed = true
+        services.inAppReviewService.shouldShowReviewReturnValue = true
+        
+        let viewModel = MainViewModel(
+            dalleService: services.dalleService,
+            subscriptionService: services.subscriptionService,
+            receiptRepository: services.receiptRepository,
+            usageRepository: services.usageRepository,
+            imageStorageService: services.imageStorageService,
+            inAppReviewService: services.inAppReviewService
+        )
+        
+        let receiptData = ReceiptData(storeName: "Test Store", currency: "USD")
+        
+        await viewModel.generateReceipt(receiptData: receiptData)
+        
+        #expect(services.inAppReviewService.requestReviewCallCount == 1)
+    }
+    
+    @Test func testGenerateReceiptSuccess_doesNotRequestReviewWhenNotAppropriate() async throws {
+        let services = createMockServices()
+        services.usageRepository.shouldReturnUsage = UsageTracker(isPremiumUser: false)
+        services.usageRepository.canGenerate = true
+        services.dalleService.shouldSucceed = true
+        services.inAppReviewService.shouldShowReviewReturnValue = false
+        
+        let viewModel = MainViewModel(
+            dalleService: services.dalleService,
+            subscriptionService: services.subscriptionService,
+            receiptRepository: services.receiptRepository,
+            usageRepository: services.usageRepository,
+            imageStorageService: services.imageStorageService,
+            inAppReviewService: services.inAppReviewService
+        )
+        
+        let receiptData = ReceiptData(storeName: "Test Store", currency: "USD")
+        
+        await viewModel.generateReceipt(receiptData: receiptData)
+        
+        #expect(services.inAppReviewService.requestReviewCallCount == 0)
+    }
+    
+    @Test func testGenerateReceiptFailure_doesNotIncrementGenerationCount() async throws {
+        let services = createMockServices()
+        services.usageRepository.shouldReturnUsage = UsageTracker(isPremiumUser: false)
+        services.usageRepository.canGenerate = true
+        services.dalleService.shouldSucceed = false
+        services.dalleService.errorToThrow = NSError(domain: "test", code: 1)
+        
+        let viewModel = MainViewModel(
+            dalleService: services.dalleService,
+            subscriptionService: services.subscriptionService,
+            receiptRepository: services.receiptRepository,
+            usageRepository: services.usageRepository,
+            imageStorageService: services.imageStorageService,
+            inAppReviewService: services.inAppReviewService
+        )
+        
+        let receiptData = ReceiptData(storeName: "Test Store", currency: "USD")
+        
+        await viewModel.generateReceipt(receiptData: receiptData)
+        
+        #expect(services.inAppReviewService.incrementGenerationCallCount == 0)
+        #expect(services.inAppReviewService.requestReviewCallCount == 0)
     }
 }

@@ -22,7 +22,8 @@ struct ContentView: View {
             subscriptionService: SubscriptionService(),
             receiptRepository: ReceiptRepository(modelContext: context),
             usageRepository: UsageRepository(modelContext: context),
-            imageStorageService: ImageStorageService()
+            imageStorageService: ImageStorageService(),
+            inAppReviewService: InAppReviewService()
         ))
     }
     

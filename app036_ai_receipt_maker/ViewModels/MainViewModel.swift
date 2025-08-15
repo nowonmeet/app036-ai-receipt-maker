@@ -18,19 +18,22 @@ final class MainViewModel: ObservableObject {
     private let receiptRepository: ReceiptRepositoryProtocol
     private let usageRepository: UsageRepositoryProtocol
     private let imageStorageService: ImageStorageServiceProtocol
+    private let inAppReviewService: InAppReviewServiceProtocol
     
     init(
         dalleService: DALLEServiceProtocol,
         subscriptionService: SubscriptionServiceProtocol,
         receiptRepository: ReceiptRepositoryProtocol,
         usageRepository: UsageRepositoryProtocol,
-        imageStorageService: ImageStorageServiceProtocol
+        imageStorageService: ImageStorageServiceProtocol,
+        inAppReviewService: InAppReviewServiceProtocol
     ) {
         self.dalleService = dalleService
         self.subscriptionService = subscriptionService
         self.receiptRepository = receiptRepository
         self.usageRepository = usageRepository
         self.imageStorageService = imageStorageService
+        self.inAppReviewService = inAppReviewService
     }
     
     func loadReceipts() async {
@@ -79,6 +82,10 @@ final class MainViewModel: ObservableObject {
             
             // Reload receipts
             await loadReceipts()
+            
+            // Increment generation count and request review if appropriate
+            inAppReviewService.incrementGenerationCount()
+            inAppReviewService.requestReviewIfAppropriate()
             
         } catch {
             errorMessage = error.localizedDescription

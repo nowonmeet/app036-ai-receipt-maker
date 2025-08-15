@@ -40,12 +40,15 @@ struct ReceiptDetailViewGeneratingStateTests {
         let usageRepository = MockUsageRepository()
         let imageStorageService = MockImageStorageService()
         
+        let inAppReviewService = MockInAppReviewService()
+        
         let mainViewModel = MainViewModel(
             dalleService: dalleService,
             subscriptionService: subscriptionService,
             receiptRepository: receiptRepository,
             usageRepository: usageRepository,
-            imageStorageService: imageStorageService
+            imageStorageService: imageStorageService,
+            inAppReviewService: inAppReviewService
         )
         
         // 生成状態の検証
