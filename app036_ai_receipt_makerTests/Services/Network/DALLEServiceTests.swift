@@ -12,7 +12,8 @@ import Foundation
 struct DALLEServiceTests {
     
     @Test func testGenerateReceiptImageSuccess() async throws {
-        let service = DALLEService()
+        let mockSubscriptionService = MockSubscriptionService()
+        let service = DALLEService(subscriptionService: mockSubscriptionService)
         let prompt = "Generate a realistic receipt for Coffee Shop with items: Coffee $4.99, Muffin $3.50. Total: $8.49"
         
         // This test would normally use a mock HTTP client
@@ -21,7 +22,8 @@ struct DALLEServiceTests {
     }
     
     @Test func testGenerateReceiptImageWithEmptyPrompt() async throws {
-        let service = DALLEService()
+        let mockSubscriptionService = MockSubscriptionService()
+        let service = DALLEService(subscriptionService: mockSubscriptionService)
         
         await #expect(throws: AppError.self) {
             try await service.generateReceiptImage(prompt: "")
@@ -29,7 +31,8 @@ struct DALLEServiceTests {
     }
     
     @Test func testGenerateReceiptImageWithInvalidAPIKey() async throws {
-        let service = DALLEService()
+        let mockSubscriptionService = MockSubscriptionService()
+        let service = DALLEService(subscriptionService: mockSubscriptionService)
         let prompt = "Test prompt"
         
         // Since we don't pass API key in constructor anymore, this test is not needed
@@ -38,7 +41,8 @@ struct DALLEServiceTests {
     }
     
     @Test func testPromptGeneration() throws {
-        let service = DALLEService()
+        let mockSubscriptionService = MockSubscriptionService()
+        let service = DALLEService(subscriptionService: mockSubscriptionService)
         
         let receiptData = ReceiptData(storeName: "Coffee Shop", currency: "USD")
         receiptData.items = [
@@ -58,7 +62,8 @@ struct DALLEServiceTests {
     }
     
     @Test func testPromptGenerationWithRandomData() throws {
-        let service = DALLEService()
+        let mockSubscriptionService = MockSubscriptionService()
+        let service = DALLEService(subscriptionService: mockSubscriptionService)
         
         let prompt1 = service.generateRandomReceiptPrompt()
         let prompt2 = service.generateRandomReceiptPrompt()
@@ -69,7 +74,8 @@ struct DALLEServiceTests {
     }
     
     @Test func testPromptGenerationWithDifferentCurrencies() throws {
-        let service = DALLEService()
+        let mockSubscriptionService = MockSubscriptionService()
+        let service = DALLEService(subscriptionService: mockSubscriptionService)
         
         let usdReceipt = ReceiptData(storeName: "US Store", currency: "USD")
         usdReceipt.items = [ReceiptItem(name: "Item", price: Decimal(10.00), quantity: 1)]
@@ -87,14 +93,16 @@ struct DALLEServiceTests {
     }
     
     @Test func testAPIEndpointConfiguration() throws {
-        let service = DALLEService()
+        let mockSubscriptionService = MockSubscriptionService()
+        let service = DALLEService(subscriptionService: mockSubscriptionService)
         
         let endpoint = service.apiEndpoint
         #expect(endpoint == "https://api.openai.com/v1/images/generations")
     }
     
     @Test func testRequestHeadersConfiguration() throws {
-        let service = DALLEService()
+        let mockSubscriptionService = MockSubscriptionService()
+        let service = DALLEService(subscriptionService: mockSubscriptionService)
         
         let headers = service.requestHeaders
         #expect(headers["Authorization"] == "Bearer test-api-key")

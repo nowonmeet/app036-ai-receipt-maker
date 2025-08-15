@@ -10,6 +10,7 @@ import Foundation
 final class DALLEService: DALLEServiceProtocol {
     private let apiKey: String
     private let baseURL = "https://api.openai.com/v1/images/generations"
+    private let subscriptionService: SubscriptionServiceProtocol
     
     var apiEndpoint: String {
         return baseURL
@@ -22,8 +23,9 @@ final class DALLEService: DALLEServiceProtocol {
         ]
     }
     
-    init() {
+    init(subscriptionService: SubscriptionServiceProtocol) {
         self.apiKey = APIConfiguration.openAIAPIKey
+        self.subscriptionService = subscriptionService
     }
     
     func generateReceiptImage(prompt: String) async throws -> Data {
@@ -35,11 +37,21 @@ final class DALLEService: DALLEServiceProtocol {
             throw AppError.apiError("API key is required")
         }
         
+        // 課金状態に応じて品質を設定
+        let quality: String
+        if subscriptionService.isPremiumUser {
+            quality = "high"
+            print("💎 Premium user detected - using high quality")
+        } else {
+            quality = "low"
+            print("🆓 Free user detected - using low quality")
+        }
+        
         let requestBody = GPTImageRequest(
             model: "gpt-image-1",
             prompt: prompt,
             n: 1,
-            quality: "medium",
+            quality: quality,
             size: "1024x1024"
         )
         

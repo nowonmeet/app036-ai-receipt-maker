@@ -17,9 +17,10 @@ struct ContentView: View {
     
     init() {
         let context = ModelContainer.shared.mainContext
+        let subscriptionService = SubscriptionService()
         _mainViewModel = StateObject(wrappedValue: MainViewModel(
-            dalleService: DALLEService(),
-            subscriptionService: SubscriptionService(),
+            dalleService: DALLEService(subscriptionService: subscriptionService),
+            subscriptionService: subscriptionService,
             receiptRepository: ReceiptRepository(modelContext: context),
             usageRepository: UsageRepository(modelContext: context),
             imageStorageService: ImageStorageService(),
