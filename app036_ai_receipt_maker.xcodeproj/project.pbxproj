@@ -29,7 +29,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		05474D9E2E47E010008C4D37 /* app036_ai_receipt_maker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = app036_ai_receipt_maker.app; path = "Receipt Maker.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		05474D9E2E47E010008C4D37 /* Receipt Maker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Receipt Maker.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		05474DAB2E47E012008C4D37 /* app036_ai_receipt_makerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = app036_ai_receipt_makerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		05474DB52E47E012008C4D37 /* app036_ai_receipt_makerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = app036_ai_receipt_makerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -92,7 +92,7 @@
 		05474D9F2E47E010008C4D37 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				05474D9E2E47E010008C4D37 /* app036_ai_receipt_maker.app */,
+				05474D9E2E47E010008C4D37 /* Receipt Maker.app */,
 				05474DAB2E47E012008C4D37 /* app036_ai_receipt_makerTests.xctest */,
 				05474DB52E47E012008C4D37 /* app036_ai_receipt_makerUITests.xctest */,
 			);
@@ -123,7 +123,7 @@
 				054750612E494267008C4D37 /* RevenueCatUI */,
 			);
 			productName = app036_ai_receipt_maker;
-			productReference = 05474D9E2E47E010008C4D37 /* app036_ai_receipt_maker.app */;
+			productReference = 05474D9E2E47E010008C4D37 /* Receipt Maker.app */;
 			productType = "com.apple.product-type.application";
 		};
 		05474DAA2E47E012008C4D37 /* app036_ai_receipt_makerTests */ = {
@@ -425,9 +425,13 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.app036-fake-receipt-maker";
 				PRODUCT_NAME = "Receipt Maker";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -454,9 +458,13 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.app036-fake-receipt-maker";
 				PRODUCT_NAME = "Receipt Maker";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

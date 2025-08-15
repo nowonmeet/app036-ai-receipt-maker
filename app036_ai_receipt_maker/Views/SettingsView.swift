@@ -7,14 +7,20 @@
 
 import SwiftUI
 import SwiftData
+import SafariServices
 
 struct SettingsView: View {
     @ObservedObject private var paywallManager = UniversalPaywallManager.shared
     @State private var showingFeedback = false
+    @State private var showingPrivacyPolicy = false
+    @State private var showingTermsOfService = false
     @State private var currentUsage: UsageTracker?
     @Query private var usageTrackers: [UsageTracker]
     
     private var subscriptionService = SubscriptionService()
+    
+    private let privacyPolicyURL = URL(string: "https://nowonmeet.github.io/legal_common/en/privacy.html")!
+    private let termsOfServiceURL = URL(string: "https://nowonmeet.github.io/legal_common/en/terms.html")!
     
     var body: some View {
         NavigationView {
@@ -30,6 +36,10 @@ struct SettingsView: View {
                     }
                     
                     feedbackCard
+                    
+                    legalCard
+                    
+                    Spacer(minLength: 50)
                 }
                 .padding(.horizontal, 20)
                 .padding(.top, 20)
@@ -46,6 +56,12 @@ struct SettingsView: View {
         }
         .sheet(isPresented: $showingFeedback) {
             FeedbackView(feedbackService: FeedbackService(gasEndpointURL: APIConfiguration.feedbackGASEndpointURL))
+        }
+        .sheet(isPresented: $showingPrivacyPolicy) {
+            SafariView(url: privacyPolicyURL)
+        }
+        .sheet(isPresented: $showingTermsOfService) {
+            SafariView(url: termsOfServiceURL)
         }
     }
     
@@ -97,7 +113,6 @@ struct SettingsView: View {
         .background(Color(.systemBackground))
         .cornerRadius(16)
         .shadow(color: .black.opacity(0.05), radius: 10, x: 0, y: 2)
-                
     }
     
     private var upgradeCard: some View {
@@ -255,6 +270,44 @@ struct SettingsView: View {
         .shadow(color: .black.opacity(0.05), radius: 10, x: 0, y: 2)
     }
     
+    private var legalCard: some View {
+        VStack(spacing: 16) {
+            HStack {
+                Image(systemName: "doc.text.fill")
+                    .font(.title2)
+                    .foregroundColor(.gray)
+                
+                Text("Legal")
+                    .font(.headline)
+                    .fontWeight(.semibold)
+                
+                Spacer()
+            }
+            
+            VStack(spacing: 12) {
+                LegalButton(
+                    title: "Privacy Policy",
+                    icon: "lock.shield.fill",
+                    color: .blue
+                ) {
+                    showingPrivacyPolicy = true
+                }
+                
+                LegalButton(
+                    title: "Terms of Service",
+                    icon: "doc.plaintext.fill",
+                    color: .green
+                ) {
+                    showingTermsOfService = true
+                }
+            }
+        }
+        .padding(20)
+        .background(Color(.systemBackground))
+        .cornerRadius(16)
+        .shadow(color: .black.opacity(0.05), radius: 10, x: 0, y: 2)
+    }
+    
     private func getUsageText() -> String {
         if let usage = currentUsage {
             if paywallManager.isPremiumActive {
@@ -312,6 +365,39 @@ struct FeatureRow: View {
     }
 }
 
+struct LegalButton: View {
+    let title: String
+    let icon: String
+    let color: Color
+    let action: () -> Void
+    
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: 12) {
+                Image(systemName: icon)
+                    .font(.title3)
+                    .foregroundColor(color)
+                    .frame(width: 24)
+                
+                Text(title)
+                    .font(.body)
+                    .foregroundColor(.primary)
+                
+                Spacer()
+                
+                Image(systemName: "chevron.right")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            .padding(.vertical, 12)
+            .padding(.horizontal, 16)
+            .background(Color(.systemGray6))
+            .cornerRadius(10)
+        }
+        .buttonStyle(.plain)
+    }
+}
+
 struct CircularProgressView: View {
     let progress: Double
     let lineWidth: CGFloat
@@ -334,6 +420,20 @@ struct CircularProgressView: View {
                 .rotationEffect(.degrees(-90))
                 .animation(.easeInOut(duration: 0.8), value: progress)
         }
+    }
+}
+
+struct SafariView: UIViewControllerRepresentable {
+    let url: URL
+    
+    func makeUIViewController(context: Context) -> SFSafariViewController {
+        let safariViewController = SFSafariViewController(url: url)
+        safariViewController.preferredControlTintColor = UIColor.systemBlue
+        return safariViewController
+    }
+    
+    func updateUIViewController(_ uiViewController: SFSafariViewController, context: Context) {
+        // No updates needed
     }
 }
 
