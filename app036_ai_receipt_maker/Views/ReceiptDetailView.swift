@@ -80,6 +80,14 @@ struct ReceiptDetailView: View {
                         )
                         .cornerRadius(12)
                         .shadow(radius: 4)
+                        
+                        // 無課金者向けのアップグレードプロンプト
+                        if !isPremium {
+                            PremiumUpgradePromptView {
+                                mainViewModel.showPaywallForQualityUpgrade()
+                            }
+                            .padding(.top, 8)
+                        }
                     }
                     
                     VStack(alignment: .leading, spacing: 12) {

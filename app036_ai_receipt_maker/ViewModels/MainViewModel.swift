@@ -149,6 +149,13 @@ final class MainViewModel: ObservableObject {
     }
     
     
+    // MARK: - Public Methods
+    
+    func showPaywallForQualityUpgrade() {
+        print("📱 [MainViewModel] Showing paywall for quality upgrade")
+        UniversalPaywallManager.shared.showPaywall(triggerSource: "receipt_quality_upgrade")
+    }
+    
     // MARK: - Private Methods
     
     private func generatePrompt(from receiptData: ReceiptData) -> String {

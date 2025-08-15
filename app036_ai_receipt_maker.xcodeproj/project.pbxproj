@@ -29,7 +29,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		05474D9E2E47E010008C4D37 /* app036_ai_receipt_maker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = app036_ai_receipt_maker.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		05474D9E2E47E010008C4D37 /* app036_ai_receipt_maker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = app036_ai_receipt_maker.app; path = "Receipt Maker.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		05474DAB2E47E012008C4D37 /* app036_ai_receipt_makerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = app036_ai_receipt_makerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		05474DB52E47E012008C4D37 /* app036_ai_receipt_makerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = app036_ai_receipt_makerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
