@@ -154,6 +154,7 @@ final class ReceiptFormViewModel: ObservableObject {
 
 // MARK: - Receipt Item Input Model
 
+@MainActor
 final class ReceiptItemInput: ObservableObject {
     @Published var name: String = ""
     @Published var price: Double = 0.0

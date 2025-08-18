@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 
+@MainActor
 final class OnboardingViewModel: ObservableObject {
     @Published var currentPageIndex: Int = 0
     
